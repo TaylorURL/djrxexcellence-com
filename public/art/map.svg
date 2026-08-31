@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" role="presentation">
+  <ellipse cx="80" cy="128" rx="48" ry="6" fill="#00266b" opacity="0.12"/>
+  <polygon points="14,44 58,30 58,108 14,122" fill="#ffffff"/>
+  <polygon points="58,30 102,44 102,122 58,108" fill="#eef2f8"/>
+  <polygon points="102,44 146,30 146,108 102,122" fill="#ffffff"/>
+  <path d="M20 112c12-16 18-34 20-58" fill="none" stroke="#00266b" stroke-width="2"/>
+  <path d="M112 58c4 22 12 40 24 52" fill="none" stroke="#00266b" stroke-width="2"/>
+  <path d="M14 84c12 2 20 10 24 22" fill="none" stroke="#0043ff" stroke-width="2"/>
+  <path d="M104 52c10 10 22 14 36 14" fill="none" stroke="#0043ff" stroke-width="2"/>
+  <circle cx="28" cy="60" r="3.5" fill="#00266b"/>
+  <circle cx="46" cy="88" r="3.5" fill="#00266b"/>
+  <circle cx="72" cy="106" r="3.5" fill="#00266b"/>
+  <circle cx="120" cy="80" r="3.5" fill="#00266b"/>
+  <circle cx="134" cy="94" r="3.5" fill="#00266b"/>
+  <circle cx="112" cy="104" r="3.5" fill="#00266b"/>
+  <polygon points="14,44 58,30 58,108 14,122" fill="none" stroke="#00266b" stroke-width="2"/>
+  <polygon points="58,30 102,44 102,122 58,108" fill="none" stroke="#00266b" stroke-width="2"/>
+  <polygon points="102,44 146,30 146,108 102,122" fill="none" stroke="#00266b" stroke-width="2"/>
+  <path d="M80 24c-14 0-25 11-25 25 0 18 25 45 25 45s25-27 25-45c0-14-11-25-25-25Z" fill="#e01000"/>
+  <circle cx="76" cy="45" r="17" fill="#ff7a6c"/>
+  <circle cx="80" cy="49" r="9" fill="#ffffff"/>
+</svg>

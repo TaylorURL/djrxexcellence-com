@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" role="presentation">
+  <ellipse cx="80" cy="128" rx="46" ry="6" fill="#00266b" opacity="0.12"/>
+  <rect x="34" y="32" width="96" height="90" rx="4" fill="#eef2f8"/>
+  <rect x="28" y="28" width="96" height="90" rx="4" fill="#ffffff"/>
+  <path d="M32 28h88a4 4 0 0 1 4 4v14H28V32a4 4 0 0 1 4-4Z" fill="#0043ff"/>
+  <rect x="28" y="46" width="96" height="4" fill="#00266b"/>
+  <rect x="46" y="14" width="8" height="22" rx="4" fill="#00266b"/>
+  <rect x="98" y="14" width="8" height="22" rx="4" fill="#00266b"/>
+  <rect x="47.5" y="16" width="3" height="13" rx="1.5" fill="#eef2f8"/>
+  <rect x="99.5" y="16" width="3" height="13" rx="1.5" fill="#eef2f8"/>
+  <rect x="36" y="58" width="16" height="14" rx="2" fill="#eef2f8"/>
+  <rect x="57" y="58" width="16" height="14" rx="2" fill="#eef2f8"/>
+  <rect x="78" y="58" width="16" height="14" rx="2" fill="#eef2f8"/>
+  <rect x="99" y="58" width="16" height="14" rx="2" fill="#eef2f8"/>
+  <rect x="36" y="78" width="16" height="14" rx="2" fill="#eef2f8"/>
+  <rect x="78" y="78" width="16" height="14" rx="2" fill="#eef2f8"/>
+  <rect x="99" y="78" width="16" height="14" rx="2" fill="#eef2f8"/>
+  <rect x="36" y="98" width="16" height="14" rx="2" fill="#eef2f8"/>
+  <rect x="57" y="98" width="16" height="14" rx="2" fill="#eef2f8"/>
+  <rect x="57" y="78" width="16" height="14" rx="2" fill="#e01000"/>
+  <rect x="57" y="78" width="16" height="4" rx="2" fill="#ff7a6c"/>
+  <rect x="28" y="28" width="96" height="90" rx="4" fill="none" stroke="#00266b" stroke-width="2"/>
+</svg>

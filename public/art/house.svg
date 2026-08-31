@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" role="presentation">
+  <ellipse cx="80" cy="128" rx="46" ry="6" fill="#00266b" opacity="0.12"/>
+  <rect x="32" y="66" width="76" height="56" fill="#ffffff"/>
+  <rect x="102" y="66" width="6" height="56" fill="#eef2f8"/>
+  <polygon points="32,66 70,32 108,66" fill="#ffffff"/>
+  <polygon points="70,32 108,66 70,66" fill="#eef2f8"/>
+  <rect x="32" y="66" width="76" height="56" fill="none" stroke="#00266b" stroke-width="2"/>
+  <polygon points="32,66 70,32 108,66" fill="none" stroke="#00266b" stroke-width="2"/>
+  <rect x="90" y="22" width="13" height="36" fill="#eef2f8"/>
+  <rect x="90" y="22" width="4" height="36" fill="#ffffff"/>
+  <rect x="87" y="17" width="19" height="6" fill="#00266b"/>
+  <polygon points="70,26 22,70 22,80 70,36" fill="#ff7a6c"/>
+  <polygon points="70,26 118,70 118,80 70,36" fill="#e01000"/>
+  <circle cx="70" cy="50" r="7" fill="#0043ff"/>
+  <line x1="70" y1="43" x2="70" y2="57" stroke="#ffffff" stroke-width="2"/>
+  <line x1="63" y1="50" x2="77" y2="50" stroke="#ffffff" stroke-width="2"/>
+  <rect x="38" y="78" width="16" height="18" fill="#0043ff"/>
+  <rect x="50" y="78" width="4" height="18" fill="#00266b"/>
+  <line x1="46" y1="78" x2="46" y2="96" stroke="#ffffff" stroke-width="2"/>
+  <line x1="38" y1="87" x2="54" y2="87" stroke="#ffffff" stroke-width="2"/>
+  <rect x="36" y="96" width="20" height="3" fill="#00266b"/>
+  <rect x="86" y="78" width="16" height="18" fill="#0043ff"/>
+  <rect x="98" y="78" width="4" height="18" fill="#00266b"/>
+  <line x1="94" y1="78" x2="94" y2="96" stroke="#ffffff" stroke-width="2"/>
+  <line x1="86" y1="87" x2="102" y2="87" stroke="#ffffff" stroke-width="2"/>
+  <rect x="84" y="96" width="20" height="3" fill="#00266b"/>
+  <rect x="58" y="84" width="26" height="38" fill="#00266b"/>
+  <rect x="61" y="87" width="20" height="35" fill="#0043ff"/>
+  <rect x="75" y="87" width="6" height="35" fill="#00266b"/>
+  <circle cx="73" cy="106" r="2" fill="#ffffff"/>
+  <rect x="54" y="120" width="34" height="9" fill="#eef2f8"/>
+  <rect x="54" y="120" width="34" height="3" fill="#ffffff"/>
+  <rect x="54" y="127" width="34" height="2" fill="#00266b"/>
+</svg>

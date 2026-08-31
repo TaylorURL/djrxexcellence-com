@@ -1,0 +1,35 @@
+node_modules
+dist
+dist-ssr
+.env
+.env.local
+.env.*.local
+*.local
+.DS_Store
+.vercel
+.idea
+.vscode
+.fleet
+*.iml
+npm-debug.log*
+Thumbs.db
+desktop.ini
+
+# Secrets and key material. The rules above cover .env, .env.local and the
+# per-mode locals; this catches every other suffix, and .env.production would
+# carry the seed accounts' passwords. The example file stays tracked.
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+
+# Tooling config that belongs to the machine rather than the project.
+.claude
+.intelligence/
+
+# Generated at build time by scripts/sitemap.js
+public/sitemap.xml
+public/llms.txt
