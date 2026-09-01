@@ -10,6 +10,7 @@ import {
 } from "@/config/site";
 import BrandLockup from "@/components/ui/BrandLockup";
 import ThemeControl from "@/components/ui/ThemeControl";
+import { currentYear } from "../../lib/format";
 
 const explore = [
   { to: "/listings", label: "Listings" },
@@ -162,7 +163,7 @@ export default function Footer() {
               should be independently verified. Equal Housing Opportunity.
             </p>
             <p>
-              © {new Date().getFullYear()} {agent.name}
+              © {currentYear()} {agent.name}
             </p>
           </div>
         </div>
