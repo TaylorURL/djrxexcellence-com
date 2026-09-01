@@ -5,9 +5,14 @@ import RequireAuth from "@/components/RequireAuth";
 import ScrollToTop from "@/components/ScrollToTop";
 import PageFallback from "@/components/PageFallback";
 import { routes } from "@/config/routes";
+import Home from "@/pages/Home";
 
+// Every other page is split, because a visitor reaches it from a screen that is
+// already painted and pays the chunk's round trip while reading. The home page
+// is the one nobody navigates to: it is the landing, so a split there costs the
+// first visitor a second round trip before anything but the skeleton exists.
 const pages = {
-  home: lazy(() => import("@/pages/Home")),
+  home: Home,
   listings: lazy(() => import("@/pages/Listings")),
   listingDetail: lazy(() => import("@/pages/ListingDetail")),
   areas: lazy(() => import("@/pages/Areas")),

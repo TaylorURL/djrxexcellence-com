@@ -23,6 +23,23 @@
       })();
     </script>
 
+    <!-- The prerendered shell is written for a reader that never runs the
+         script: a crawler takes the words out of the source, and a screen
+         reader has them before the bundle mounts. On screen it is a stack of
+         default-styled links that React throws away a moment later, so it is
+         held out of the picture and left in the tree. The rule is inline
+         because the stylesheet arrives a round trip after the frame it would
+         have to govern. -->
+    <style>
+      #prerender {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+    </style>
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
@@ -53,6 +70,17 @@
       imagesrcset="/agent/dylan-jordan-500.webp 500w, /agent/dylan-jordan.webp 1000w"
       imagesizes="(min-width: 1024px) 40vw, 100vw"
       fetchpriority="high"
+    />
+
+    <!-- The contour texture is a CSS background, which the browser cannot ask
+         for until the element carrying it has been laid out. That puts the
+         widest surface above the fold last in the queue, repainting the hero
+         after it is already on screen. -->
+    <link
+      rel="preload"
+      as="image"
+      type="image/svg+xml"
+      href="/art/terrain.svg"
     />
 
     <title>Dylan Jordan | RE/MAX Excellence, Dayton TX</title>

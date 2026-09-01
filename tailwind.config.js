@@ -36,7 +36,12 @@ export default {
         },
       },
       fontFamily: {
-        display: ["National Park", "Georgia", "serif"],
+        display: [
+          "National Park",
+          "National Park Fallback",
+          "Georgia",
+          "serif",
+        ],
         sans: [
           "Work Sans",
           "Work Sans Fallback",

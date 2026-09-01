@@ -45,7 +45,6 @@ export default function AgentPortrait({ className, priority = false }) {
         height={1250}
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}
-        decoding={priority ? "sync" : "async"}
         onError={() => setFailed(true)}
         className={cn("bg-surface-sunken object-cover", className)}
       />
