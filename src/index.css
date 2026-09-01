@@ -26,13 +26,14 @@
     U+2215, U+FEFF, U+FFFD;
 }
 
-/* The fallback is measured against Work Sans so the swap does not move the line.
-   Work Sans is 1000 units per em with a 930 ascender and a 243 descender, and
-   its lowercase runs 11.89% wider than Helvetica's, which is where size-adjust
-   comes from; the two overrides are those metrics divided by that adjustment.
-   Body type carries the fallback because it is the bulk of every page. The
-   display face swaps into a handful of headings and does not earn a second
-   family in the stack. */
+/* Each fallback is measured against the face it stands in for, so the swap does
+   not move the line. Work Sans is 1000 units per em with a 930 ascender and a
+   243 descender, and its lowercase runs 11.89% wider than Helvetica's, which is
+   where size-adjust comes from; the two overrides are those metrics divided by
+   that adjustment. National Park is read the same way against Georgia: 1030 and
+   300 over the same 1000 units, at every weight it carries. The display face
+   earns a fallback because the hero column is centred on its own height, so a
+   heading that rewraps on the swap moves everything beside it. */
 @font-face {
   font-family: "Work Sans Fallback";
   font-display: swap;
@@ -41,6 +42,37 @@
   descent-override: 21.72%;
   line-gap-override: 0%;
   size-adjust: 111.89%;
+}
+
+/* Georgia is the only local these name. The overrides are cut for its widths,
+   and a serif wearing numbers taken off another moves the line they exist to
+   hold; where Georgia is absent the stack falls through to the plain serif
+   behind it. The bold is its own face because Georgia's is a separate drawing
+   running 17% wider than its regular, and every heading here is semibold, so a
+   family carrying only the regular would set the whole display face on the
+   wrong width. */
+@font-face {
+  font-family: "National Park Fallback";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Georgia");
+  ascent-override: 104.66%;
+  descent-override: 30.48%;
+  line-gap-override: 0%;
+  size-adjust: 98.41%;
+}
+
+@font-face {
+  font-family: "National Park Fallback";
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src: local("Georgia Bold"), local("Georgia-Bold");
+  ascent-override: 115.28%;
+  descent-override: 33.58%;
+  line-gap-override: 0%;
+  size-adjust: 89.35%;
 }
 
 @tailwind base;
@@ -636,17 +668,15 @@
 }
 
 @layer components {
-  /* A borrowed mark keeps its own proportions inside the box it is given,
-     because a wordmark that is not square is cropped by anything that fills. */
-  .mark {
-    object-fit: contain;
+  /* The ink the lockup's wordmark draws itself in. Navy reads on paper and on
+     the gray theme's slate; nothing but white reads on the dark theme's
+     surface. Both are the brand's own values rather than a theme token, so the
+     wordmark is the same colour on every ground the brand allows. */
+  .brand-lockup {
+    color: #000e35;
   }
 
-  /* One lockup on screen at a time. The navy wordmark reads on paper and the
-     reversed one reads on the dark ground; the theme picks, and the reversed
-     copy is aria-hidden so a screen reader hears the brokerage name once. */
-  [data-theme="dark"] .brand-lockup-ink,
-  :root:not([data-theme="dark"]) .brand-lockup-paper {
-    display: none;
+  [data-theme="dark"] .brand-lockup {
+    color: #ffffff;
   }
 }

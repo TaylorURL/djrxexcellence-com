@@ -19,9 +19,22 @@ export default defineConfig({
     cssTarget: ["chrome111", "edge111", "firefox113", "safari16.4"],
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ["react", "react-dom", "react-router-dom"],
-          supabase: ["@supabase/supabase-js"],
+        // Keyed on the directory a module was resolved out of, not on the
+        // package name. A name is matched against the package's own entry
+        // module, and nothing imports `react-dom` itself -- `react-dom/client`
+        // is a different module, so the renderer fell through into the entry
+        // chunk and every release sent a returning visitor to download React a
+        // second time.
+        manualChunks(id) {
+          if (
+            /\/node_modules\/(react|react-dom|react-router|react-router-dom|scheduler)\//.test(
+              id,
+            )
+          ) {
+            return "react";
+          }
+          if (/\/node_modules\/@supabase\//.test(id)) return "supabase";
+          return undefined;
         },
       },
     },

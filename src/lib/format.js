@@ -32,11 +32,39 @@ export function address(listing) {
     .join(" ");
 }
 
+// The office is in Dayton, so today is the day it is there. A calendar day
+// rather than a count of elapsed hours: a comment left at eleven last night is
+// "Yesterday" at nine this morning, which counting hours calls "Today".
+const ZONE = "America/Chicago";
+
+const dayHere = (value = new Date()) =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(value instanceof Date ? value : new Date(value));
+
 export function relativeDate(value) {
   const then = new Date(value);
-  const days = Math.round((Date.now() - then.getTime()) / 86400000);
-  if (days < 1) return "Today";
+  if (Number.isNaN(then.getTime())) return "";
+  const day = dayHere(then);
+  const today = dayHere();
+  if (day === today) return "Today";
+  const days = Math.round(
+    (Date.parse(`${today}T00:00:00Z`) - Date.parse(`${day}T00:00:00Z`)) /
+      86400000,
+  );
   if (days === 1) return "Yesterday";
-  if (days < 30) return `${days} days ago`;
-  return then.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  if (days > 0 && days < 30) return `${days} days ago`;
+  return then.toLocaleDateString("en-US", {
+    timeZone: ZONE,
+    month: "short",
+    day: "numeric",
+  });
+}
+
+/** The year here, for a line that names the office rather than the reader. */
+export function currentYear() {
+  return Number(dayHere().slice(0, 4));
 }

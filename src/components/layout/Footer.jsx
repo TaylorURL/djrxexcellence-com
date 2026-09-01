@@ -10,6 +10,7 @@ import {
 } from "@/config/site";
 import BrandLockup from "@/components/ui/BrandLockup";
 import ThemeControl from "@/components/ui/ThemeControl";
+import { currentYear } from "../../lib/format";
 
 const explore = [
   { to: "/listings", label: "Listings" },
@@ -72,12 +73,7 @@ export default function Footer() {
         <div className="mt-12">
           <div className="flex flex-wrap items-start justify-between gap-x-10 gap-y-8 border-t border-surface-line pt-8">
             <div className="space-y-2">
-              <BrandLockup
-                width={131}
-                height={36}
-                loading="lazy"
-                className="h-8"
-              />
+              <BrandLockup width={131} height={36} className="h-8" />
               <p className="font-display text-lg font-semibold">{agent.name}</p>
               <address className="text-sm not-italic leading-relaxed text-ink-muted">
                 {brokerage.street}
@@ -162,7 +158,7 @@ export default function Footer() {
               should be independently verified. Equal Housing Opportunity.
             </p>
             <p>
-              © {new Date().getFullYear()} {agent.name}
+              © {currentYear()} {agent.name}
             </p>
           </div>
         </div>
