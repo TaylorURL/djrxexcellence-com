@@ -242,6 +242,22 @@
           }
           return parts.join(" ");
         }
+        // A visitor holding the bundle from an earlier deploy asks the server
+        // for a chunk hash the current HTML no longer names, and the request
+        // answers 404. Reloading picks up the fresh document with the new
+        // hashes and the interaction continues; a failure that survives that
+        // reload is a real defect and reaches the queue as one.
+        var reloadKey = "dj-stale-reload";
+        function staleReload() {
+          try {
+            if (sessionStorage.getItem(reloadKey)) return false;
+            sessionStorage.setItem(reloadKey, "1");
+          } catch (ignored) {
+            return false;
+          }
+          location.reload();
+          return true;
+        }
         // Capture phase, because element load failures fire error events that do not bubble.
         window.addEventListener(
           "error",
@@ -252,12 +268,14 @@
                 event.target !== window &&
                 event.target.tagName
               ) {
+                var target = event.target.src || event.target.href || "";
+                if (target.indexOf("/assets/") > -1 && staleReload()) return;
                 report(
                   "resource",
                   "Failed to load " +
                     event.target.tagName.toLowerCase() +
                     ": " +
-                    (event.target.src || event.target.href || ""),
+                    target,
                 );
               } else {
                 report(
@@ -272,6 +290,13 @@
           },
           true,
         );
+        // Dynamic imports fail as fetches rather than as DOM element loads, so
+        // the capture-phase handler above never sees them. Vite raises this
+        // event for both paths and the reload mechanism reaches the second one
+        // through it.
+        window.addEventListener("vite:preloadError", function (event) {
+          if (staleReload()) event.preventDefault();
+        });
         window.addEventListener("unhandledrejection", function (event) {
           try {
             var reason = event.reason;
