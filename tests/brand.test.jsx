@@ -8,6 +8,8 @@ import { FavoritesProvider } from "@/context/FavoritesProvider";
 import Header from "@/components/layout/Header";
 import { PANEL_ID } from "@/components/layout/headerNav";
 import Hero from "@/components/home/Hero";
+import BrandLockup from "@/components/ui/BrandLockup";
+import { brokerage } from "@/config/site";
 import { areas } from "@/data/areas";
 import { SEARCH_HINT } from "@/lib/listingFilters";
 
@@ -39,11 +41,35 @@ describe("the icon a tab shows", () => {
     );
   });
 
-  it("keeps a reversed lockup for the footer's dark ground", () => {
+  it("keeps a reversed lockup for the social card's dark ground", () => {
+    expect(read("scripts/social-card.js")).toContain("remax-logo-light.svg");
     expect(read("public/brand/remax-logo-light.svg")).toContain(
       'fill="#ffffff"',
     );
     expect(read("public/brand/remax-logo.svg")).toContain('fill="#000e35"');
+  });
+});
+
+// A wordmark behind an <img> is its own document and takes no colour from the
+// page, so an inked file per ground is the only way to reverse one. Drawn in
+// the page, it takes the ink the ground sets and the artwork travels once.
+describe("the lockup on the page", () => {
+  const lockup = read("src/components/ui/BrandLockup.jsx");
+  const css = read("src/index.css");
+
+  it("draws its wordmark in the colour it inherits", () => {
+    expect(lockup).toContain('fill="currentColor"');
+    render(<BrandLockup width={102} height={28} />);
+    const mark = screen.getByRole("img", { name: brokerage.name });
+    expect(mark.tagName.toLowerCase()).toBe("svg");
+    expect(document.querySelectorAll("img")).toHaveLength(0);
+  });
+
+  it("takes navy on paper and white on the dark ground", () => {
+    expect(css).toMatch(/\.brand-lockup\s*\{\s*color:\s*#000e35;\s*\}/);
+    expect(css).toMatch(
+      /\[data-theme="dark"\]\s+\.brand-lockup\s*\{\s*color:\s*#ffffff;\s*\}/,
+    );
   });
 });
 

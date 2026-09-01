@@ -4,32 +4,75 @@ import { brokerage } from "@/config/site";
 /**
  * The RE/MAX lockup, on whichever ground the theme is currently painting.
  *
- * The wordmark is a fixed brand asset in navy, which is invisible on the dark
- * theme's surface, so both lockups ship and CSS picks one. Doing it in CSS
- * rather than from the theme value means the right one is on screen in the
- * first paint, and neither is ever swapped mid-render.
+ * The wordmark is navy on paper and reversed to white on the dark theme's
+ * surface, so it is drawn in `currentColor` and the ground decides. That is
+ * what keeps it inline: a file behind an `<img>` is its own document and
+ * inherits no colour from the page holding it, so the ink can only be chosen by
+ * shipping the artwork once per ground and hiding the copy that does not
+ * belong. Nothing is swapped mid-render either way. The pin keeps the brand's
+ * own colours on both grounds.
  */
 export default function BrandLockup({ className, width, height, ...props }) {
-  const shared = cn("mark w-auto", className);
   return (
-    <>
-      <img
-        src="/brand/remax-logo.svg"
-        alt={brokerage.name}
-        width={width}
-        height={height}
-        className={cn("brand-lockup-ink", shared)}
-        {...props}
-      />
-      <img
-        src="/brand/remax-logo-light.svg"
-        alt={brokerage.name}
-        width={width}
-        height={height}
-        aria-hidden="true"
-        className={cn("brand-lockup-paper", shared)}
-        {...props}
-      />
-    </>
+    <svg
+      viewBox="0 0 800 219.34273"
+      width={width}
+      height={height}
+      role="img"
+      aria-label={brokerage.name}
+      className={cn("brand-lockup w-auto", className)}
+      {...props}
+    >
+      <g transform="matrix(3.7558685,0,0,3.7558685,-4.1314554,-3.0046948)">
+        <g>
+          <g>
+            <path
+              fill="currentColor"
+              d="M 199.9,37.3 212.5,16.8 H 200.4 L 193.2,29.7 186,16.8 h -12.6 l 12.6,20.1 -8.6,14 -11.6,-34.1 H 152.1 L 139.8,52.7 V 16.8 h -13 L 117.4,45.4 108,16.8 h -4.6 l -8.5,16.4 v 26 H 105 v -25 l 8.1,25 h 8.1 l 8.2,-25.1 v 25.1 h 19.4 l 2.6,-8.1 h 14.7 l 2.5,8.1 v 0 c 0,0 0,0 0,0 h 15.8 l 8.2,-14.8 8.8,14.8 h 12.7 L 199.8,37.4 Z M 154.1,42 158.8,26.2 163.5,42 H 154 Z"
+            />
+          </g>
+          <g>
+            <path
+              fill="currentColor"
+              d="M 94.9,25.7 V 16.8 H 65.7 V 59.1 H 81.4 L 86,50.2 h -9.2 v -8.1 h 13.4 l 4.7,-9 H 76.8 v -7.5 h 18.1 z"
+            />
+            <path
+              fill="currentColor"
+              d="m 51.2,34.7 c -1,0.9 -2.7,1.4 -5.1,1.4 H 40.4 V 25.4 H 46 c 2.5,0 4.2,0.4 5.2,1.3 1,0.9 1.5,2.2 1.5,4 0,1.8 -0.5,3.2 -1.5,4.1 z m 5.7,7.5 c 4.3,-2.5 6.5,-6.5 6.5,-12 0,-5.5 -1.3,-7.4 -4,-9.8 C 56.7,18 52.5,16.8 46.6,16.8 h -17 V 59.1 H 40.3 V 44.5 h 6.6 L 54,59.1 h 11.7 l -8.8,-17 z"
+            />
+          </g>
+        </g>
+        <g>
+          <path
+            fill="#fff"
+            d="M 14.4,31 C 13.9,31 13.5,30.7 13.1,30.4 10.7,28.4 6.5,24.7 4.9,22.6 3.5,20.9 2.2,19.3 1.6,17.2 1.2,16 1.1,14.8 1.1,13.6 1.1,12.4 1.4,10.4 2,8.9 4,4 8.9,0.8 14.4,0.8 19.9,0.8 24.8,4 26.8,9 c 0.6,1.5 0.9,3.1 0.9,4.7 0,1.6 -0.2,2.4 -0.5,3.6 -0.6,2 -1.8,3.6 -3.3,5.4 -1.7,2 -5.9,5.7 -8.2,7.7 -0.4,0.3 -0.8,0.6 -1.3,0.6 z"
+          />
+          <g>
+            <g>
+              <path
+                fill="#f7f5ee"
+                d="M 26.2,9.2 H 2.6 c -0.6,1.4 -0.9,2.9 -0.9,4.4 0,1.5 0.2,2.3 0.5,3.4 H 26.5 C 26.8,15.9 27,14.8 27,13.6 27,12.4 26.7,10.5 26.1,9.2 Z"
+              />
+              <path
+                fill="#600"
+                d="M 14.4,1.5 C 9,1.5 4.4,4.7 2.6,9.2 H 26.2 C 24.4,4.7 19.8,1.5 14.4,1.5 Z"
+              />
+            </g>
+            <path
+              fill="#000e35"
+              d="m 2.2,17.1 c 0.6,2 1.9,3.6 3.2,5.2 1.7,2.1 6.4,6.2 8.2,7.8 v 0 c 0.2,0.2 0.5,0.4 0.8,0.4 0.3,0 0.5,-0.2 0.8,-0.4 v 0 c 1.8,-1.6 6.5,-5.7 8.2,-7.8 1.3,-1.6 2.6,-3.2 3.2,-5.2 z"
+            />
+            <path
+              fill="#ff1200"
+              d="M 26.2,9.2 H 14.4 V 3.6 c 0,-1.2 1.1,-2.1 2.3,-1.9 4.4,0.8 8,3.7 9.5,7.5 z"
+            />
+            <path
+              fill="#0043ff"
+              d="m 26.5,17.1 c -0.6,2 -1.9,3.6 -3.2,5.2 -1.7,2.1 -6.4,6.2 -8.2,7.8 v 0 c -0.2,0.2 -0.5,0.4 -0.8,0.4 V 19.2 c 0,-1.1 0.9,-2 2,-2 h 10.1 z"
+            />
+          </g>
+        </g>
+      </g>
+    </svg>
   );
 }
