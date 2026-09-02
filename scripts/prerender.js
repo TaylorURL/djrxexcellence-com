@@ -157,6 +157,32 @@ function shell(route, meta) {
       </div>`;
 }
 
+/**
+ * Runs the bundle after the first frame rather than before it.
+ *
+ * Every route written here is a finished document, so its first frame owes
+ * the bundle nothing. A module script is deferred, which only means it waits
+ * for the parser: it runs the moment parsing ends, and on a slow phone that
+ * moment arrives before the browser has found a frame to paint the document
+ * in. The page then sits blank while the bundle adopts markup nobody has been
+ * shown, and the whole download is charged to the first paint.
+ *
+ * The entry keeps its early fetch, as a module preload, and loses its script
+ * tag. An inline module in its place asks for the bundle one frame after the
+ * first, which is the first frame the document can have been painted in and
+ * the earliest the bundle can no longer hold it back.
+ */
+function paintFirst(html) {
+  const entry = html.match(
+    /^[ \t]*<script type="module" crossorigin src="([^"]+)"><\/script>\n/m,
+  );
+  if (!entry) throw new Error("prerender: the shell carries no module entry");
+  const [tag, src] = entry;
+  const preload = `    <link rel="modulepreload" crossorigin href="${src}" />\n`;
+  const boot = `    <script type="module">requestAnimationFrame(() => requestAnimationFrame(() => import(${JSON.stringify(src)})))</script>\n`;
+  return html.replace(tag, `${preload}${boot}`);
+}
+
 function head(route, meta) {
   const url = `${origin}${route === "/" ? "/" : route}`;
   const title = `${meta.title} | Dylan Jordan, RE/MAX Excellence`;
@@ -170,7 +196,9 @@ async function main() {
     ...areaMeta(areaMetaFor),
     ...(await listingMeta()),
   };
-  const template = await fs.readFile(path.join(dist, "index.html"), "utf8");
+  const template = paintFirst(
+    await fs.readFile(path.join(dist, "index.html"), "utf8"),
+  );
   let written = 0;
 
   for (const [route, entry] of Object.entries(meta)) {
@@ -206,6 +234,16 @@ async function main() {
       html = html.replace(
         '<meta name="twitter:card" content="summary_large_image" />',
         `<meta name="twitter:card" content="summary_large_image" />\n    <meta name="twitter:title" content="${escape(title)}" />\n    <meta name="twitter:description" content="${escape(entry.description)}" />`,
+      );
+    }
+
+    // The contour texture is the home hero's alone. Preloaded on any other
+    // route it is 28 KB fetched for nothing on the page and a warning in the
+    // console once the browser notices nothing drew it.
+    if (route !== "/") {
+      html = html.replace(
+        /(?:[ \t]*<!--(?:(?!-->)[\s\S])*?-->\n)?[ \t]*<link\s[^>]*?\/art\/terrain\.svg[^>]*?>\n\n?/,
+        "",
       );
     }
 
