@@ -15,7 +15,7 @@ every environment, and into CryptoFort so the next machine does not have to ask.
 
 ## Apply the schema
 
-Run the five migrations in order against the new project, either through the
+Run the six migrations in order against the new project, either through the
 SQL editor or the CLI:
 
 ```bash
@@ -44,6 +44,11 @@ reads the public pages make and the insert the contact form makes;
 narrow to its own rows. The same file revokes execute on
 `public.rls_auto_enable()`, which fires from an event trigger and runs as its
 owner, so the grant only exposed it.
+
+`0006_lead_removal.sql` adds the delete policy on `leads`. The grant in `0005`
+already lets `authenticated` issue the statement, but with no policy behind it
+every delete matched nothing and reported success, so the rows the verification
+script filed stayed in the table. Only the agent may remove one.
 
 `public.is_agent()` and `public.profile_role()` stay executable by `anon` and
 `authenticated` on purpose. Row-level security policies are evaluated as the
