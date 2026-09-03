@@ -58,18 +58,6 @@ export async function postComment({
   return data;
 }
 
-export async function updateComment(id, body) {
-  const supabase = requireClient();
-  const { data, error } = await supabase
-    .from("comments")
-    .update({ body })
-    .eq("id", id)
-    .select(SELECT)
-    .single();
-  if (error) throw error;
-  return data;
-}
-
 export async function setCommentHidden(id, hidden) {
   const supabase = requireClient();
   const { data, error } = await supabase

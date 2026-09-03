@@ -12,9 +12,12 @@
   listing dashboard on one React application.<br />
   Live at <a href="https://djrxexcellence.com">djrxexcellence.com</a>.
 </p>
+<p align="center">
+  <sub>Published for reading. Proprietary — see <a href="LICENSE.md">LICENSE.md</a>. Outside contributions are not accepted.</sub>
+</p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-2026.36.10-DC1C2E?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/version-2026.36.11-DC1C2E?style=for-the-badge" alt="Version" />
   <img src="https://img.shields.io/badge/React-19-DC1C2E?style=for-the-badge&logo=react&logoColor=white" alt="React 19" />
   <img src="https://img.shields.io/badge/Vite-7-DC1C2E?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 7" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-3-DC1C2E?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 3" />
@@ -80,21 +83,21 @@ config tokens the office still has to supply.
 
 ### Scripts
 
-| Script                    | Does                                                                |
-| :------------------------ | :------------------------------------------------------------------ |
-| `npm run dev`             | Start the Vite dev server.                                          |
-| `npm run build`           | Write the sitemap, build to `dist`, then prerender every route.     |
-| `npm run preview`         | Serve the built `dist` locally.                                     |
-| `npm test`                | Vitest: routes, helpers, interactions, brand assets, the rewrite.   |
-| `npm run lint`            | Lint with ESLint.                                                   |
-| `npm run format:check`    | Check formatting without writing, the same check CI runs.           |
-| `npm run seed`            | Fill a fresh project with eight sample listings and drawn photos.   |
-| `npm run verify:policies` | Run the row-level policy assertions against the live project.       |
-| `npm run sitemap`         | Write `public/sitemap.xml` and `public/llms.txt`.                   |
-| `npm run calver`          | Move the version in the three places it appears.                    |
-| `npm run brand`           | Redraw the pin, the lockups and the app icons from the RE/MAX mark. |
-| `npm run terrain`         | Redraw the contour field behind the hero.                           |
-| `npm run social-card`     | Render `public/social-card.png`, the image a link preview shows.    |
+| Script                    | Does                                                                                                         |
+| :------------------------ | :----------------------------------------------------------------------------------------------------------- |
+| `npm run dev`             | Start the Vite dev server.                                                                                   |
+| `npm run build`           | Write the sitemap, build to `dist`, then prerender every route.                                              |
+| `npm run preview`         | Serve the built `dist` locally.                                                                              |
+| `npm test`                | Vitest: routes, helpers, interactions, the cost and mortgage math, brand assets, the prerender, the rewrite. |
+| `npm run lint`            | Lint with ESLint.                                                                                            |
+| `npm run format:check`    | Check formatting without writing, the same check CI runs.                                                    |
+| `npm run seed`            | Fill a fresh project with eight sample listings and drawn photos.                                            |
+| `npm run verify:policies` | Run the row-level policy assertions against the live project.                                                |
+| `npm run sitemap`         | Write `public/sitemap.xml` and `public/llms.txt`.                                                            |
+| `npm run calver`          | Move the version in the three places it appears.                                                             |
+| `npm run brand`           | Redraw the pin, the lockups and the app icons from the RE/MAX mark.                                          |
+| `npm run terrain`         | Redraw the contour field behind the hero.                                                                    |
+| `npm run social-card`     | Render `public/social-card.png`, the image a link preview shows.                                             |
 
 ## Architecture
 
@@ -148,7 +151,7 @@ flowchart TD
 - **Brand assets are derived, not drawn twice.** `scripts/brand-assets.js` splits
   the RE/MAX lockup into a pin and a wordmark and writes the favicon, the two
   lockups and the app icons from it. The pin alone is what a 16px tile gets;
-  the full lockup is five times wider than it is tall.
+  the full lockup is nearly four times wider than it is tall.
 - **Browser errors report themselves.** The snippet in `index.html` catches
   uncaught errors, rejections, failed resources, 5xx responses and console
   errors, and posts them to the reporting collector. It stops at ten per page so
@@ -156,7 +159,7 @@ flowchart TD
 
 ## Database
 
-`supabase/migrations` holds the schema in five files.
+`supabase/migrations` holds the schema in six files.
 
 | File                                        | Adds                                                                                                  |
 | :------------------------------------------ | :---------------------------------------------------------------------------------------------------- |
@@ -165,6 +168,7 @@ flowchart TD
 | `0003_testimonials_and_comment_authors.sql` | Testimonials, lead triage columns, the author name stamped onto a comment, and two repairs to `0002`. |
 | `0004_function_hardening.sql`               | A pinned search path on the definer functions, and the trigger functions off the public RPC surface.  |
 | `0005_least_privilege_grants.sql`           | Table privileges narrowed to the statements each browser role issues.                                 |
+| `0006_lead_removal.sql`                     | The delete policy on `leads`, without which the grant matched no rows and reported success.           |
 
 `npm run seed` fills a fresh project with eight listings and five drawn photos
 each; `npm run seed -- --teardown` removes them. `npm run verify:policies` runs
@@ -175,26 +179,31 @@ member and the agent in turn, and cleans up after itself.
 
 ```
 djrxexcellence-com/
+├── api/version.js         The commit this deployment was built from, uncached
 ├── docs/SETUP.md          The Supabase runbook: schema, auth, seeding, what is still unset
 ├── public/                Brand marks, the eight illustrations, the two variable fonts,
-│                          the share card, robots.txt, the app icons
+│                          the agent portrait, the share card, robots.txt, the app icons
 ├── scripts/               sitemap, prerender, CalVer, the seeders, the policy checks,
 │                          and the brand, terrain and social-card generators
 ├── supabase/migrations/   The schema, the policies, and the two hardening passes
 ├── tests/                 Vitest suites
 ├── src/
-│   ├── components/        AgentPortrait, LeadForm, RequireAuth, ScrollToTop, Seo
+│   ├── components/        AgentPortrait, LeadForm, PageFallback, RequireAuth,
+│   │                      ScrollToTop, Seo
 │   │   ├── account/       The signed-in shell and its tabs
 │   │   ├── admin/         The dashboard shell, its nav, and the photo manager
+│   │   ├── costs/         The carrying-cost panel, the town comparison and its bars
 │   │   ├── home/          Hero, hero search, area grid, testimonials
 │   │   ├── layout/        Header, the mega menu panels, footer, page shell
 │   │   ├── legal/         The shared page frame the four legal routes fill
 │   │   ├── listing/       Gallery, lightbox, map, filters, comments, mortgage, share
-│   │   └── ui/            Button and Field
+│   │   └── ui/            BrandLockup, Button, ClickSpark, Field, ThemeControl
 │   ├── config/            Site details, the route table, and the per-route head
-│   ├── context/           Auth session, favorites, the comparison tray
-│   ├── data/              The eight service areas, their districts and ZIP codes
-│   ├── lib/               Formatting, filters, mortgage math, JSON-LD builders
+│   ├── context/           Auth session, favorites, the comparison tray, the theme
+│   ├── data/              The eight service areas, their districts and ZIP codes,
+│   │                      and what it costs to carry a house in each
+│   ├── lib/               Formatting, filters, mortgage and carrying-cost math,
+│   │                      JSON-LD builders, the Supabase client, the hooks
 │   ├── pages/             One file per route, lazily imported
 │   └── services/          Every Supabase read and write
 ├── index.html             Head, font preloads, and the error reporting snippet
@@ -205,7 +214,7 @@ djrxexcellence-com/
 
 CalVer, as `YYYY.WW.PATCH`. `npm run calver` moves `package.json`,
 `public/release.json` and the badge above together, and CI refuses a pull
-request into `develop` where the three disagree or the version has not moved.
+request into `main` where the three disagree or the version has not moved.
 
 <br />
 
