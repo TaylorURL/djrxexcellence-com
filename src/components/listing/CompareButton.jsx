@@ -22,7 +22,7 @@ export default function CompareButton({ listingId, className }) {
       className={cn(
         "relative z-10 flex h-9 w-9 items-center justify-center rounded-lg shadow-card backdrop-blur transition-colors duration-fast ease-out disabled:cursor-not-allowed disabled:opacity-50",
         selected
-          ? "bg-brand-blue text-white"
+          ? "bg-brand-blue text-on-accent"
           : "bg-surface/90 text-ink hover:text-brand-blue",
         className,
       )}

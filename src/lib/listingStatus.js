@@ -7,11 +7,11 @@ export const STATUS_LABELS = {
 };
 
 export const STATUS_TONES = {
-  coming_soon: "bg-brand-blue text-white",
+  coming_soon: "bg-brand-blue text-on-accent",
   active: "bg-brand-red text-on-accent",
   pending: "bg-brand-red-light text-ink",
-  sold: "bg-ink text-white",
-  off_market: "bg-ink-muted text-white",
+  sold: "bg-ink text-surface",
+  off_market: "bg-ink-muted text-surface",
 };
 
 export const PROPERTY_TYPE_LABELS = {
