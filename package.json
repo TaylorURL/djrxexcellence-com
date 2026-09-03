@@ -2,7 +2,7 @@
   "name": "djrxexcellence-com",
   "private": true,
   "license": "UNLICENSED",
-  "version": "2026.36.11",
+  "version": "2026.36.12",
   "description": "Real estate site for Dylan Jordan of RE/MAX Excellence in Dayton, Texas.",
   "type": "module",
   "scripts": {
@@ -18,7 +18,6 @@
     "seed": "node --env-file-if-exists=.env.local scripts/seed.js",
     "verify:policies": "node --env-file-if-exists=.env.local scripts/verify-policies.js",
     "sitemap": "node scripts/sitemap.js",
-    "calver": "node scripts/calver.js",
     "brand": "node scripts/brand-assets.js",
     "terrain": "node scripts/hero-terrain.js",
     "social-card": "node scripts/social-card.js",

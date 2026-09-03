@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-2026.36.11-DC1C2E?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/version-2026.36.12-DC1C2E?style=for-the-badge" alt="Version" />
   <img src="https://img.shields.io/badge/React-19-DC1C2E?style=for-the-badge&logo=react&logoColor=white" alt="React 19" />
   <img src="https://img.shields.io/badge/Vite-7-DC1C2E?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 7" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-3-DC1C2E?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 3" />
@@ -94,7 +94,6 @@ config tokens the office still has to supply.
 | `npm run seed`            | Fill a fresh project with eight sample listings and drawn photos.                                            |
 | `npm run verify:policies` | Run the row-level policy assertions against the live project.                                                |
 | `npm run sitemap`         | Write `public/sitemap.xml` and `public/llms.txt`.                                                            |
-| `npm run calver`          | Move the version in the three places it appears.                                                             |
 | `npm run brand`           | Redraw the pin, the lockups and the app icons from the RE/MAX mark.                                          |
 | `npm run terrain`         | Redraw the contour field behind the hero.                                                                    |
 | `npm run social-card`     | Render `public/social-card.png`, the image a link preview shows.                                             |
@@ -183,7 +182,7 @@ djrxexcellence-com/
 ├── docs/SETUP.md          The Supabase runbook: schema, auth, seeding, what is still unset
 ├── public/                Brand marks, the eight illustrations, the two variable fonts,
 │                          the agent portrait, the share card, robots.txt, the app icons
-├── scripts/               sitemap, prerender, CalVer, the seeders, the policy checks,
+├── scripts/               sitemap, prerender, the seeders, the policy checks,
 │                          and the brand, terrain and social-card generators
 ├── supabase/migrations/   The schema, the policies, and the two hardening passes
 ├── tests/                 Vitest suites
@@ -212,9 +211,10 @@ djrxexcellence-com/
 
 ## Versioning
 
-CalVer, as `YYYY.WW.PATCH`. `npm run calver` moves `package.json`,
-`public/release.json` and the badge above together, and CI refuses a pull
-request into `main` where the three disagree or the version has not moved.
+CalVer, as `YYYY.WW.PATCH`. The version moves once per release, in
+`package.json`, `public/release.json` and the badge above together, and CI
+refuses a pull request into `main` where the three disagree or the version has
+not moved.
 
 <br />
 
