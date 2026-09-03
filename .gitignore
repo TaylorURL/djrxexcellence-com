@@ -12,6 +12,7 @@ dist-ssr
 .fleet
 *.iml
 npm-debug.log*
+*.log
 Thumbs.db
 desktop.ini
 
