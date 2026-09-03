@@ -8,6 +8,7 @@ import {
   phoneLines,
   socialLinks,
 } from "@/config/site";
+import SplitRail from "@taylorurl/split-rail";
 import BrandLockup from "@/components/ui/BrandLockup";
 import ThemeControl from "@/components/ui/ThemeControl";
 import { currentYear } from "../../lib/format";
@@ -162,6 +163,9 @@ export default function Footer() {
             </p>
           </div>
         </div>
+      </div>
+      <div className="pt-6">
+        <SplitRail version={__BUILD_VERSION__} />
       </div>
     </footer>
   );

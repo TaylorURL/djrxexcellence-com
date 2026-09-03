@@ -13,7 +13,7 @@ export default function Testimonials({ entries }) {
           {entries.map((entry) => (
             <li
               key={entry.id}
-              className="arrive flex flex-col rounded-2xl border border-surface-line bg-surface p-6 shadow-card transition-shadow duration-base ease-out hover:shadow-lift"
+              className="enter flex flex-col rounded-2xl border border-surface-line bg-surface p-6 shadow-card transition-shadow duration-base ease-out hover:shadow-lift"
             >
               <Quote className="h-6 w-6 text-brand-red/40" aria-hidden="true" />
               <blockquote className="mt-4 flex-1 leading-relaxed text-ink-muted">

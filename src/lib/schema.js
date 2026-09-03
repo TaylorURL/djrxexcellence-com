@@ -78,10 +78,25 @@ export function breadcrumbSchema(trail) {
   };
 }
 
+/* A listing is marked up as what it is. property_type carries seven values and
+   only one of them is a house, so a single @type would tell a search engine
+   that a tract of land and a storefront are both single family homes. Each maps
+   to the narrowest schema.org type that is still true; anything unrecognised
+   falls back to Residence rather than guessing at a dwelling. */
+const LISTING_TYPES = {
+  single_family: "SingleFamilyResidence",
+  townhouse: "House",
+  condo: "Apartment",
+  multi_family: "ApartmentComplex",
+  land: "Place",
+  farm_ranch: "Place",
+  commercial: "Place",
+};
+
 export function listingSchema(listing, imageUrls = []) {
   return {
     "@context": "https://schema.org",
-    "@type": "SingleFamilyResidence",
+    "@type": LISTING_TYPES[listing.property_type] ?? "Residence",
     name: listing.title,
     url: `${siteUrl}/listings/${listing.slug}`,
     ...(imageUrls.length ? { image: imageUrls } : {}),
