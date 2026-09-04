@@ -6,7 +6,7 @@ const SELECT = `
 `;
 
 export async function fetchPublishedTestimonials(limit) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   let query = supabase
     .from("testimonials")
     .select(SELECT)
@@ -20,7 +20,7 @@ export async function fetchPublishedTestimonials(limit) {
 }
 
 export async function fetchAllTestimonials() {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("testimonials")
     .select(SELECT)
@@ -31,7 +31,7 @@ export async function fetchAllTestimonials() {
 }
 
 export async function saveTestimonial(testimonial) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("testimonials")
     .upsert(testimonial)
@@ -51,7 +51,7 @@ export async function saveTestimonial(testimonial) {
  * fails on the row it was meant to update. An update names the row instead.
  */
 export async function setTestimonialPublished(id, published) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("testimonials")
     .update({ is_published: published })
@@ -63,7 +63,7 @@ export async function setTestimonialPublished(id, published) {
 }
 
 export async function deleteTestimonial(id) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { error } = await supabase.from("testimonials").delete().eq("id", id);
   if (error) throw error;
 }

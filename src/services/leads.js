@@ -1,13 +1,13 @@
 import { requireClient } from "@/lib/supabase";
 
 export async function submitLead(lead) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { error } = await supabase.from("leads").insert(lead);
   if (error) throw error;
 }
 
 export async function fetchLeads() {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("leads")
     .select("*, listings ( title, slug, street_address )")
@@ -17,7 +17,7 @@ export async function fetchLeads() {
 }
 
 export async function setLeadHandled(id, handled) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("leads")
     .update({
@@ -32,7 +32,7 @@ export async function setLeadHandled(id, handled) {
 }
 
 export async function saveLeadNotes(id, notes) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { error } = await supabase
     .from("leads")
     .update({ agent_notes: notes })
