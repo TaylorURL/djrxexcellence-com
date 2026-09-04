@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getClient, isConfigured } from "@/lib/supabase";
+import {
+  getClient,
+  isConfigured,
+  mayHaveSession,
+  onClientReady,
+} from "@/lib/supabase";
 import { AuthContext } from "@/context/AuthContext";
 import { fetchProfile } from "@/services/profiles";
 
@@ -7,7 +12,7 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [verifiedUser, setVerifiedUser] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(isConfigured);
+  const [loading, setLoading] = useState(isConfigured && mayHaveSession());
 
   useEffect(() => {
     if (!isConfigured) return undefined;
@@ -16,12 +21,10 @@ export function AuthProvider({ children }) {
 
     // getUser puts the stored token to the auth server, so the identity every
     // screen below trusts is one the server has verified rather than what the
-    // browser happens to be holding. The client arrives a moment after mount
-    // now, so the listener is attached first and the verification made against
-    // the same instance, leaving no window where a state change goes unheard.
-    async function bootstrap() {
-      const client = await getClient();
-      if (!client) return;
+    // browser happens to be holding. The listener is attached first and the
+    // verification made against the same instance, leaving no window where a
+    // state change goes unheard.
+    async function bootstrap(client) {
       const { data: listener } = client.auth.onAuthStateChange(
         (_event, next) => {
           setSession(next);
@@ -39,10 +42,16 @@ export function AuthProvider({ children }) {
       setLoading(false);
     }
 
-    bootstrap();
+    // Fetching the SDK is what asking it about the session costs, and a visitor
+    // holding no session has nothing to ask about. So the question is only put
+    // when there is something to restore; the rest of the time this waits, and
+    // takes up the session the moment signing in brings a client into being.
+    const stopWaiting = onClientReady(bootstrap);
+    if (mayHaveSession()) getClient();
 
     return () => {
       cancelled = true;
+      stopWaiting();
       if (subscription) subscription.unsubscribe();
     };
   }, []);
