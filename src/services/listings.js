@@ -1,4 +1,4 @@
-import { loadedClient, requireClient } from "@/lib/supabase";
+import { publicStorageUrl, requireClient, selectFrom } from "@/lib/supabase";
 
 const SELECT = `
   id, slug, title, status, property_type, price, street_address, city, state,
@@ -7,7 +7,9 @@ const SELECT = `
   school_district, mls_number, description, features, virtual_tour_url,
   video_url, is_featured, published_at, created_at,
   listing_images ( id, storage_path, alt_text, position )
-`;
+`.replace(/\s+/g, "");
+
+const PHOTO_BUCKET = "listing-photos";
 
 export const SORTS = {
   newest: { column: "published_at", ascending: false },
@@ -19,113 +21,104 @@ export const SORTS = {
 
 export const PAGE_SIZE = 12;
 
-function applyFilters(query, filters) {
-  if (filters.status) query = query.eq("status", filters.status);
-  if (filters.city) query = query.ilike("city", `%${filters.city}%`);
+function filterParams(filters) {
+  const params = [];
+  if (filters.status) params.push(["status", `eq.${filters.status}`]);
+  if (filters.city) params.push(["city", `ilike.%${filters.city}%`]);
   if (filters.propertyType)
-    query = query.eq("property_type", filters.propertyType);
-  if (filters.minPrice) query = query.gte("price", filters.minPrice);
-  if (filters.maxPrice) query = query.lte("price", filters.maxPrice);
-  if (filters.minBeds) query = query.gte("beds", filters.minBeds);
-  if (filters.minBaths) query = query.gte("baths", filters.minBaths);
-  if (filters.minSqft) query = query.gte("square_feet", filters.minSqft);
-  if (filters.minAcres) query = query.gte("lot_size_acres", filters.minAcres);
+    params.push(["property_type", `eq.${filters.propertyType}`]);
+  if (filters.minPrice) params.push(["price", `gte.${filters.minPrice}`]);
+  if (filters.maxPrice) params.push(["price", `lte.${filters.maxPrice}`]);
+  if (filters.minBeds) params.push(["beds", `gte.${filters.minBeds}`]);
+  if (filters.minBaths) params.push(["baths", `gte.${filters.minBaths}`]);
+  if (filters.minSqft) params.push(["square_feet", `gte.${filters.minSqft}`]);
+  if (filters.minAcres)
+    params.push(["lot_size_acres", `gte.${filters.minAcres}`]);
   if (filters.search) {
     const term = filters.search.replace(/[%,()]/g, " ").trim();
     if (term) {
-      query = query.or(
-        [
+      params.push([
+        "or",
+        `(${[
           `title.ilike.%${term}%`,
           `street_address.ilike.%${term}%`,
           `city.ilike.%${term}%`,
           `zip.ilike.%${term}%`,
           `mls_number.ilike.%${term}%`,
-        ].join(","),
-      );
+        ].join(",")})`,
+      ]);
     }
   }
-  return query;
+  return params;
 }
 
+const published = ["published_at", "not.is.null"];
+
 export async function fetchListings(filters = {}) {
-  const supabase = await requireClient();
-  let query = supabase
-    .from("listings")
-    .select(SELECT)
-    .not("published_at", "is", null)
-    .order("is_featured", { ascending: false })
-    .order("published_at", { ascending: false });
-
-  query = applyFilters(query, filters);
-  if (filters.limit) query = query.limit(filters.limit);
-
-  const { data, error } = await query;
-  if (error) throw error;
-  return data ?? [];
+  const { rows } = await selectFrom("listings", [
+    ["select", SELECT],
+    published,
+    ...filterParams(filters),
+    ["order", "is_featured.desc,published_at.desc"],
+    ...(filters.limit ? [["limit", String(filters.limit)]] : []),
+  ]);
+  return rows;
 }
 
 export async function fetchListingsPage(
   filters = {},
   { page = 0, pageSize = PAGE_SIZE, sort = "newest" } = {},
 ) {
-  const supabase = await requireClient();
   const order = SORTS[sort] ?? SORTS.newest;
-  const from = page * pageSize;
+  const by = [
+    ...(sort === "newest" ? ["is_featured.desc"] : []),
+    `${order.column}.${order.ascending ? "asc" : "desc"}.nullslast`,
+    "id.asc",
+  ];
 
-  let query = supabase
-    .from("listings")
-    .select(SELECT, { count: "exact" })
-    .not("published_at", "is", null);
-
-  query = applyFilters(query, filters);
-
-  if (sort === "newest")
-    query = query.order("is_featured", { ascending: false });
-  query = query
-    .order(order.column, { ascending: order.ascending, nullsFirst: false })
-    .order("id", { ascending: true })
-    .range(from, from + pageSize - 1);
-
-  const { data, error, count } = await query;
-  if (error) throw error;
-  return { rows: data ?? [], total: count ?? 0 };
+  return selectFrom(
+    "listings",
+    [
+      ["select", SELECT],
+      published,
+      ...filterParams(filters),
+      ["order", by.join(",")],
+      ["offset", String(page * pageSize)],
+      ["limit", String(pageSize)],
+    ],
+    { count: true },
+  );
 }
 
 export async function fetchListingBySlug(slug) {
-  const supabase = await requireClient();
-  const { data, error } = await supabase
-    .from("listings")
-    .select(SELECT)
-    .eq("slug", slug)
-    .maybeSingle();
-  if (error) throw error;
-  return data;
+  const { rows } = await selectFrom("listings", [
+    ["select", SELECT],
+    ["slug", `eq.${slug}`],
+    ["limit", "1"],
+  ]);
+  return rows[0] ?? null;
 }
 
 export async function fetchListingsByIds(ids) {
   if (!ids?.length) return [];
-  const supabase = await requireClient();
-  const { data, error } = await supabase
-    .from("listings")
-    .select(SELECT)
-    .in("id", ids)
-    .not("published_at", "is", null);
-  if (error) throw error;
-  return data ?? [];
+  const { rows } = await selectFrom("listings", [
+    ["select", SELECT],
+    ["id", `in.(${ids.join(",")})`],
+    published,
+  ]);
+  return rows;
 }
 
 export async function fetchNearbyListings(listing, limit = 3) {
-  const supabase = await requireClient();
-  const { data, error } = await supabase
-    .from("listings")
-    .select(SELECT)
-    .eq("city", listing.city)
-    .neq("id", listing.id)
-    .not("published_at", "is", null)
-    .order("published_at", { ascending: false })
-    .limit(limit);
-  if (error) throw error;
-  return data ?? [];
+  const { rows } = await selectFrom("listings", [
+    ["select", SELECT],
+    ["city", `eq.${listing.city}`],
+    ["id", `neq.${listing.id}`],
+    published,
+    ["order", "published_at.desc"],
+    ["limit", String(limit)],
+  ]);
+  return rows;
 }
 
 export async function fetchAllListingsForAgent() {
@@ -188,10 +181,7 @@ export async function slugExists(slug, exceptId) {
 }
 
 export function publicImageUrl(storagePath) {
-  const supabase = loadedClient();
-  if (!supabase || !storagePath) return null;
-  return supabase.storage.from("listing-photos").getPublicUrl(storagePath).data
-    .publicUrl;
+  return publicStorageUrl(PHOTO_BUCKET, storagePath);
 }
 
 export function coverImage(listing) {
