@@ -1,7 +1,7 @@
 import { requireClient } from "@/lib/supabase";
 
 export async function fetchProfile(userId) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("profiles")
     .select("id, full_name, email, phone, avatar_url, role, created_at")
@@ -12,7 +12,7 @@ export async function fetchProfile(userId) {
 }
 
 export async function updateProfile(userId, changes) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("profiles")
     .update(changes)

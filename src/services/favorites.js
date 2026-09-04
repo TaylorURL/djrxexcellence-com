@@ -1,7 +1,7 @@
 import { requireClient } from "@/lib/supabase";
 
 export async function fetchFavoriteIds(userId) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("favorites")
     .select("listing_id")
@@ -11,7 +11,7 @@ export async function fetchFavoriteIds(userId) {
 }
 
 export async function fetchFavoriteListings(userId) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("favorites")
     .select("listing_id, listings (*, listing_images (*))")
@@ -22,7 +22,7 @@ export async function fetchFavoriteListings(userId) {
 }
 
 export async function addFavorite(userId, listingId) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { error } = await supabase
     .from("favorites")
     .insert({ user_id: userId, listing_id: listingId });
@@ -30,7 +30,7 @@ export async function addFavorite(userId, listingId) {
 }
 
 export async function removeFavorite(userId, listingId) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { error } = await supabase
     .from("favorites")
     .delete()

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { supabase, isConfigured } from "@/lib/supabase";
+import { requireClient, isConfigured } from "@/lib/supabase";
 import Button from "@/components/ui/Button";
 import Field, { inputClasses } from "@/components/ui/Field";
 import Seo from "@/components/Seo";
@@ -21,6 +21,7 @@ export default function SignIn() {
       setBusy(false);
       return;
     }
+    const supabase = await requireClient();
     const { error: caught } = await supabase.auth.signInWithPassword({
       email: form.get("email"),
       password: form.get("password"),

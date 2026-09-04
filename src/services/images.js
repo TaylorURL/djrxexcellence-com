@@ -11,7 +11,7 @@ function safeName(name) {
 }
 
 export async function fetchListingImages(listingId) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("listing_images")
     .select("id, storage_path, alt_text, position")
@@ -22,7 +22,7 @@ export async function fetchListingImages(listingId) {
 }
 
 export async function uploadListingImage({ listingId, file, position }) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const path = `${listingId}/${Date.now()}-${safeName(file.name)}`;
 
   const { error: uploadError } = await supabase.storage
@@ -43,7 +43,7 @@ export async function uploadListingImage({ listingId, file, position }) {
 }
 
 export async function deleteListingImage(image) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { error } = await supabase
     .from("listing_images")
     .delete()
@@ -53,7 +53,7 @@ export async function deleteListingImage(image) {
 }
 
 export async function saveImageOrder(images) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const updates = images.map((image, index) =>
     supabase
       .from("listing_images")
@@ -66,7 +66,7 @@ export async function saveImageOrder(images) {
 }
 
 export async function saveImageAltText(id, altText) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { error } = await supabase
     .from("listing_images")
     .update({ alt_text: altText })

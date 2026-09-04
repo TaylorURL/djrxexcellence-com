@@ -1,7 +1,7 @@
 import { requireClient } from "@/lib/supabase";
 
 export async function fetchSavedSearches(userId) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("saved_searches")
     .select("id, label, filters, created_at")
@@ -12,7 +12,7 @@ export async function fetchSavedSearches(userId) {
 }
 
 export async function createSavedSearch({ userId, label, filters }) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("saved_searches")
     .insert({ user_id: userId, label, filters })
@@ -23,7 +23,7 @@ export async function createSavedSearch({ userId, label, filters }) {
 }
 
 export async function deleteSavedSearch(id) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { error } = await supabase.from("saved_searches").delete().eq("id", id);
   if (error) throw error;
 }
