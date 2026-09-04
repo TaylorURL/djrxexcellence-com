@@ -6,7 +6,7 @@ const SELECT = `
 `;
 
 export async function fetchComments(listingId) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("comments")
     .select(SELECT)
@@ -17,7 +17,7 @@ export async function fetchComments(listingId) {
 }
 
 export async function fetchCommentsByAuthor(authorId) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("comments")
     .select(`${SELECT}, listings ( slug, street_address, city )`)
@@ -28,7 +28,7 @@ export async function fetchCommentsByAuthor(authorId) {
 }
 
 export async function fetchAllComments() {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("comments")
     .select(`${SELECT}, listings ( slug, street_address, city )`)
@@ -43,7 +43,7 @@ export async function postComment({
   body,
   parentId = null,
 }) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("comments")
     .insert({
@@ -59,7 +59,7 @@ export async function postComment({
 }
 
 export async function setCommentHidden(id, hidden) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("comments")
     .update({ is_hidden: hidden })
@@ -71,7 +71,7 @@ export async function setCommentHidden(id, hidden) {
 }
 
 export async function deleteComment(id) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { error } = await supabase.from("comments").delete().eq("id", id);
   if (error) throw error;
 }

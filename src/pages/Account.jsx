@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/useAuth";
-import { supabase } from "@/lib/supabase";
+import { requireClient } from "@/lib/supabase";
 import { updateProfile } from "@/services/profiles";
 import AccountShell from "@/components/account/AccountShell";
 import Button from "@/components/ui/Button";
@@ -40,6 +40,7 @@ export default function Account() {
     const form = new FormData(event.currentTarget);
     const password = form.get("password");
     setPasswordStatus("");
+    const supabase = await requireClient();
     const { error: caught } = await supabase.auth.updateUser({ password });
     setPasswordStatus(caught ? caught.message : "Password updated");
     if (!caught) event.currentTarget.reset();

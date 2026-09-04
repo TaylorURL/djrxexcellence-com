@@ -1,4 +1,4 @@
-import { requireClient, supabase } from "@/lib/supabase";
+import { loadedClient, requireClient } from "@/lib/supabase";
 
 const SELECT = `
   id, slug, title, status, property_type, price, street_address, city, state,
@@ -48,7 +48,7 @@ function applyFilters(query, filters) {
 }
 
 export async function fetchListings(filters = {}) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   let query = supabase
     .from("listings")
     .select(SELECT)
@@ -68,7 +68,7 @@ export async function fetchListingsPage(
   filters = {},
   { page = 0, pageSize = PAGE_SIZE, sort = "newest" } = {},
 ) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const order = SORTS[sort] ?? SORTS.newest;
   const from = page * pageSize;
 
@@ -92,7 +92,7 @@ export async function fetchListingsPage(
 }
 
 export async function fetchListingBySlug(slug) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("listings")
     .select(SELECT)
@@ -104,7 +104,7 @@ export async function fetchListingBySlug(slug) {
 
 export async function fetchListingsByIds(ids) {
   if (!ids?.length) return [];
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("listings")
     .select(SELECT)
@@ -115,7 +115,7 @@ export async function fetchListingsByIds(ids) {
 }
 
 export async function fetchNearbyListings(listing, limit = 3) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("listings")
     .select(SELECT)
@@ -129,7 +129,7 @@ export async function fetchNearbyListings(listing, limit = 3) {
 }
 
 export async function fetchAllListingsForAgent() {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("listings")
     .select(SELECT)
@@ -139,7 +139,7 @@ export async function fetchAllListingsForAgent() {
 }
 
 export async function fetchListingForAgent(id) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("listings")
     .select(SELECT)
@@ -150,7 +150,7 @@ export async function fetchListingForAgent(id) {
 }
 
 export async function saveListing(listing) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("listings")
     .upsert(listing)
@@ -161,7 +161,7 @@ export async function saveListing(listing) {
 }
 
 export async function setListingPublished(id, published) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { data, error } = await supabase
     .from("listings")
     .update({ published_at: published ? new Date().toISOString() : null })
@@ -173,13 +173,13 @@ export async function setListingPublished(id, published) {
 }
 
 export async function deleteListing(id) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   const { error } = await supabase.from("listings").delete().eq("id", id);
   if (error) throw error;
 }
 
 export async function slugExists(slug, exceptId) {
-  const supabase = requireClient();
+  const supabase = await requireClient();
   let query = supabase.from("listings").select("id").eq("slug", slug).limit(1);
   if (exceptId) query = query.neq("id", exceptId);
   const { data, error } = await query;
@@ -188,6 +188,7 @@ export async function slugExists(slug, exceptId) {
 }
 
 export function publicImageUrl(storagePath) {
+  const supabase = loadedClient();
   if (!supabase || !storagePath) return null;
   return supabase.storage.from("listing-photos").getPublicUrl(storagePath).data
     .publicUrl;
