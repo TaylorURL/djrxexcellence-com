@@ -1,22 +1,18 @@
-import { requireClient } from "@/lib/supabase";
+import { requireClient, selectFrom } from "@/lib/supabase";
 
 const SELECT = `
   id, author_name, author_location, transaction_kind, quote, rating,
   is_published, position, created_at
-`;
+`.replace(/\s+/g, "");
 
 export async function fetchPublishedTestimonials(limit) {
-  const supabase = await requireClient();
-  let query = supabase
-    .from("testimonials")
-    .select(SELECT)
-    .eq("is_published", true)
-    .order("position", { ascending: true })
-    .order("created_at", { ascending: false });
-  if (limit) query = query.limit(limit);
-  const { data, error } = await query;
-  if (error) throw error;
-  return data ?? [];
+  const { rows } = await selectFrom("testimonials", [
+    ["select", SELECT],
+    ["is_published", "eq.true"],
+    ["order", "position.asc,created_at.desc"],
+    ...(limit ? [["limit", String(limit)]] : []),
+  ]);
+  return rows;
 }
 
 export async function fetchAllTestimonials() {
