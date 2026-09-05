@@ -10,10 +10,25 @@ const initials = agent.name
 const stem = agent.headshot.replace(/\.[a-z]+$/i, "");
 
 /**
+ * The box the hero gives the portrait: 22rem, and 24rem from the large
+ * breakpoint up. Described as a share of the viewport instead, a phone took
+ * the full 1000w file for a 352px slot, which put 30 KB at high priority in
+ * front of the contour texture the hero paints from. A caller that lays the
+ * portrait out differently passes its own string; this one is repeated
+ * verbatim, with the srcset below, on the head preload in index.html, which
+ * has to resolve the same candidate or the portrait is fetched twice.
+ */
+const heroSizes = "(min-width: 1024px) 24rem, 22rem";
+
+/**
  * The portrait falls back to the monogram the header uses when the headshot
  * file is absent, so a missing image is never a broken one.
  */
-export default function AgentPortrait({ className, priority = false }) {
+export default function AgentPortrait({
+  className,
+  priority = false,
+  sizes = heroSizes,
+}) {
   const [failed, setFailed] = useState(false);
 
   if (failed) {
@@ -33,17 +48,10 @@ export default function AgentPortrait({ className, priority = false }) {
 
   return (
     <picture>
-      {/* The sizes describe the box this is given rather than the viewport:
-          22rem on the home hero, 24rem from the large breakpoint up, and the
-          About column lands on the same figure. Given the viewport instead, a
-          phone at 1.75x asked for 721px and took the full 1000w file to fill a
-          352px slot. Both strings are repeated verbatim on
-          the head preload in index.html, which has to resolve the same
-          candidate or the portrait is fetched twice. */}
       <source
         type="image/webp"
         srcSet={`${stem}-500.webp 500w, ${stem}-720.webp 720w, ${stem}.webp 1000w`}
-        sizes="(min-width: 1024px) 24rem, 22rem"
+        sizes={sizes}
       />
       <img
         src={agent.headshot}

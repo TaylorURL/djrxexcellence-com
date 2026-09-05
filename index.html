@@ -63,13 +63,14 @@
     />
 
     <!-- The hero caps the portrait at 22rem, and at 24rem from the large
-         breakpoint up, so the widest box it is ever asked to fill is 384 CSS
-         px. Describing the viewport instead of that box sent a phone at 1.75x
-         to the 1000w file for a 352px slot, which put 30 KB at high priority
-         in front of the contour texture the hero actually paints from. This
-         pair and the srcset and sizes on AgentPortrait's picture element have
-         to stay identical, or the two resolve to different candidates and the
-         portrait is fetched twice. -->
+         breakpoint up. Described as a share of the viewport instead, a phone
+         took the full 1000w file for a 352px slot, which put 30 KB at high
+         priority in front of the contour texture the hero actually paints
+         from. This pair describes the hero's box and nothing else, so
+         prerender drops the preload from every other route; here it and the
+         srcset and sizes AgentPortrait renders have to stay identical, or the
+         two resolve to different candidates and the portrait is fetched
+         twice. -->
     <link
       rel="preload"
       as="image"
