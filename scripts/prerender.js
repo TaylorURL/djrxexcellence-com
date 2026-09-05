@@ -237,14 +237,23 @@ async function main() {
       );
     }
 
-    // The contour texture is the home hero's alone. Preloaded on any other
-    // route it is 28 KB fetched for nothing on the page and a warning in the
-    // console once the browser notices nothing drew it.
+    // Both image preloads are the home hero's alone. The portrait pair is
+    // written for the hero's box, and About lays the same component out at
+    // page width below the large breakpoint, where the preload would resolve a
+    // candidate that page never asks for; no other route renders the portrait
+    // at all. The contour texture, preloaded anywhere else, is 28 KB fetched
+    // for nothing on the page and a warning in the console once the browser
+    // notices nothing drew it.
     if (route !== "/") {
-      html = html.replace(
-        /(?:[ \t]*<!--(?:(?!-->)[\s\S])*?-->\n)?[ \t]*<link\s[^>]*?\/art\/terrain\.svg[^>]*?>\n\n?/,
-        "",
-      );
+      html = html
+        .replace(
+          /(?:[ \t]*<!--(?:(?!-->)[\s\S])*?-->\n)?[ \t]*<link\s[^>]*?\/agent\/dylan-jordan[^>]*?>\n\n?/,
+          "",
+        )
+        .replace(
+          /(?:[ \t]*<!--(?:(?!-->)[\s\S])*?-->\n)?[ \t]*<link\s[^>]*?\/art\/terrain\.svg[^>]*?>\n\n?/,
+          "",
+        );
     }
 
     const target =

@@ -62,25 +62,38 @@
       crossorigin
     />
 
+    <!-- The hero caps the portrait at 22rem, and at 24rem from the large
+         breakpoint up. Described as a share of the viewport instead, a phone
+         took the full 1000w file for a 352px slot, which put 30 KB at high
+         priority in front of the contour texture the hero actually paints
+         from. This pair describes the hero's box and nothing else, so
+         prerender drops the preload from every other route; here it and the
+         srcset and sizes AgentPortrait renders have to stay identical, or the
+         two resolve to different candidates and the portrait is fetched
+         twice. -->
     <link
       rel="preload"
       as="image"
       type="image/webp"
       href="/agent/dylan-jordan-500.webp"
-      imagesrcset="/agent/dylan-jordan-500.webp 500w, /agent/dylan-jordan.webp 1000w"
-      imagesizes="(min-width: 1024px) 40vw, 100vw"
+      imagesrcset="/agent/dylan-jordan-500.webp 500w, /agent/dylan-jordan-720.webp 720w, /agent/dylan-jordan.webp 1000w"
+      imagesizes="(min-width: 1024px) 24rem, 22rem"
       fetchpriority="high"
     />
 
     <!-- The contour texture is a CSS background, which the browser cannot ask
          for until the element carrying it has been laid out. That puts the
          widest surface above the fold last in the queue, repainting the hero
-         after it is already on screen. -->
+         after it is already on screen. The hint is what makes the preload
+         worth having: an image preload carrying no priority is scheduled low,
+         so the request still queues behind the fonts, the portrait and the
+         entry chunk. -->
     <link
       rel="preload"
       as="image"
       type="image/svg+xml"
       href="/art/terrain.svg"
+      fetchpriority="high"
     />
 
     <title>Dylan Jordan | RE/MAX Excellence, Dayton TX</title>
