@@ -148,9 +148,9 @@ set:
 | `SOCIAL_FACEBOOK_URL` and the other four social handles | Footer, and the `sameAs` on the agent JSON-LD            |
 
 The headshot is in place at `public/agent/dylan-jordan.jpg`, with WebP siblings
-at `dylan-jordan.webp` and `dylan-jordan-500.webp` that `AgentPortrait` serves
-through a `<picture>` srcset. If the file is ever removed the portrait renders
-the monogram rather than a broken image.
+at `dylan-jordan.webp`, `dylan-jordan-720.webp` and `dylan-jordan-500.webp` that
+`AgentPortrait` serves through a `<picture>` srcset. If the file is ever removed
+the portrait renders the monogram rather than a broken image.
 
 The two accounts the seed and verification scripts use are throwaways:
 `seed-agent@djrxexcellence.com`, which holds the `agent` role and owns the

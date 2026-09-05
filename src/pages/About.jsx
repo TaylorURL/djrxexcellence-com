@@ -23,7 +23,12 @@ export default function About() {
       />
 
       <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
-        <AgentPortrait className="aspect-[4/5] w-full rounded-2xl" />
+        {/* Below the large breakpoint this is one column, so the portrait
+            fills the page shell rather than the hero's 22rem box. */}
+        <AgentPortrait
+          className="aspect-[4/5] w-full rounded-2xl"
+          sizes="(min-width: 1024px) 24rem, 100vw"
+        />
         <div className="space-y-6">
           <h1 className="font-display text-4xl font-semibold">{agent.name}</h1>
           <p className="text-lg text-ink-muted">
