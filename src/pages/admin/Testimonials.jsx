@@ -6,7 +6,7 @@ import {
   saveTestimonial,
   setTestimonialPublished,
 } from "@/services/testimonials";
-import PageFallback from "@/components/PageFallback";
+import PageFallback from "@/components/app/PageFallback";
 import AdminShell from "@/components/admin/AdminShell";
 import Button from "@/components/ui/Button";
 import Field, { inputClasses, textareaClasses } from "@/components/ui/Field";

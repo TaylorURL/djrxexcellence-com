@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { isConfigured } from "@/lib/supabase";
-import { useAuth } from "@/lib/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import {
   addFavorite,
   fetchFavoriteIds,

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
-import { useAuth } from "@/lib/useAuth";
-import { useFavorites } from "@/lib/useFavorites";
+import { useAuth } from "@/hooks/useAuth";
+import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/cn";
 
 export default function FavoriteButton({

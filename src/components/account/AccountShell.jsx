@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { LayoutDashboard } from "lucide-react";
-import { useAuth } from "@/lib/useAuth";
-import Seo from "@/components/Seo";
+import { useAuth } from "@/hooks/useAuth";
+import Seo from "@/components/app/Seo";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 

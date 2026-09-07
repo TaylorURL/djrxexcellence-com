@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { requireClient, isConfigured } from "@/lib/supabase";
 import Button from "@/components/ui/Button";
 import Field, { inputClasses } from "@/components/ui/Field";
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 
 export default function SignUp() {
   const navigate = useNavigate();

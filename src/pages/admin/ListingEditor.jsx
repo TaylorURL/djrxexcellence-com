@@ -8,8 +8,8 @@ import {
 } from "@/services/listings";
 import { PROPERTY_TYPE_LABELS, STATUS_LABELS } from "@/lib/listingStatus";
 import { areas } from "@/data/areas";
-import Seo from "@/components/Seo";
-import PageFallback from "@/components/PageFallback";
+import Seo from "@/components/app/Seo";
+import PageFallback from "@/components/app/PageFallback";
 import PhotoManager from "@/components/admin/PhotoManager";
 import Button from "@/components/ui/Button";
 import Field, { inputClasses, textareaClasses } from "@/components/ui/Field";

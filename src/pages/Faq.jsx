@@ -1,6 +1,6 @@
 import { contactPhone } from "@/config/site";
 import { faqSchema } from "@/lib/schema";
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 import Button from "@/components/ui/Button";
 
 const faqs = [

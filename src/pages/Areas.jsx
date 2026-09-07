@@ -1,6 +1,6 @@
 import { metaFor } from "@/config/routeMeta";
 import { breadcrumbSchema } from "@/lib/schema";
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 import AreaGrid from "@/components/home/AreaGrid";
 import CommunityCostCompare from "@/components/costs/CommunityCostCompare";
 import LeadForm from "@/components/LeadForm";

@@ -17,8 +17,8 @@ import {
 } from "@/lib/listingStatus";
 import { breadcrumbSchema, listingSchema } from "@/lib/schema";
 import { cn } from "@/lib/cn";
-import Seo from "@/components/Seo";
-import PageFallback from "@/components/PageFallback";
+import Seo from "@/components/app/Seo";
+import PageFallback from "@/components/app/PageFallback";
 import ListingUnavailable from "@/pages/ListingUnavailable";
 import Gallery from "@/components/listing/Gallery";
 import LazyMap from "@/components/listing/LazyMap";

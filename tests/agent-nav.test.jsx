@@ -15,8 +15,8 @@ import { MemoryRouter } from "react-router-dom";
  */
 const auth = { user: null, isAgent: false, signOut: vi.fn(), loading: false };
 
-vi.mock("@/lib/useAuth", () => ({ useAuth: () => auth }));
-vi.mock("@/lib/useFavorites", () => ({ useFavorites: () => ({ count: 0 }) }));
+vi.mock("@/hooks/useAuth", () => ({ useAuth: () => auth }));
+vi.mock("@/hooks/useFavorites", () => ({ useFavorites: () => ({ count: 0 }) }));
 
 const { default: Header } = await import("@/components/layout/Header");
 const { default: AccountShell } =

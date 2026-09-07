@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/lib/useAuth";
-import PageFallback from "@/components/PageFallback";
+import { useAuth } from "@/hooks/useAuth";
+import PageFallback from "@/components/app/PageFallback";
 
 export default function RequireAuth({ children, agentOnly = false }) {
   const { user, isAgent, loading } = useAuth();
