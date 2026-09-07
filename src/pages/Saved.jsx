@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/useAuth";
-import { useFavorites } from "@/lib/useFavorites";
+import { useAuth } from "@/hooks/useAuth";
+import { useFavorites } from "@/hooks/useFavorites";
 import { fetchFavoriteListings } from "@/services/favorites";
 import ListingCard from "@/components/listing/ListingCard";
-import PageFallback from "@/components/PageFallback";
+import PageFallback from "@/components/app/PageFallback";
 import AccountShell from "@/components/account/AccountShell";
 import CompareTray from "@/components/listing/CompareTray";
 import Button from "@/components/ui/Button";

@@ -1,4 +1,4 @@
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 import Button from "@/components/ui/Button";
 
 export default function ListingUnavailable() {

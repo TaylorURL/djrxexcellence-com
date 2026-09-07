@@ -7,7 +7,7 @@ import {
   phoneLines,
 } from "@/config/site";
 import { agentSchema } from "@/lib/schema";
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 import LeadForm from "@/components/LeadForm";
 
 export default function Contact() {

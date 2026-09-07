@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/lib/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { requireClient } from "@/lib/supabase";
 import { updateProfile } from "@/services/profiles";
 import AccountShell from "@/components/account/AccountShell";

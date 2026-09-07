@@ -9,7 +9,7 @@ import {
 } from "@/lib/carryingCost";
 import { prevalenceLabel } from "@/data/carryingCosts";
 import CostInputs from "@/components/costs/CostInputs";
-import { useCostInputs } from "@/lib/useCostInputs";
+import { useCostInputs } from "@/hooks/useCostInputs";
 import { CostLines } from "@/components/costs/CostBar";
 
 /**

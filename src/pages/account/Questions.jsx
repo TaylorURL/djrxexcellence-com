@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
-import { useAuth } from "@/lib/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { deleteComment, fetchCommentsByAuthor } from "@/services/comments";
 import { relativeDate } from "@/lib/format";
-import PageFallback from "@/components/PageFallback";
+import PageFallback from "@/components/app/PageFallback";
 import AccountShell from "@/components/account/AccountShell";
 import Button from "@/components/ui/Button";
 

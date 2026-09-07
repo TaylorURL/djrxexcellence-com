@@ -6,7 +6,7 @@ import { isConfigured } from "@/lib/supabase";
 import { fetchListings } from "@/services/listings";
 import { fetchPublishedTestimonials } from "@/services/testimonials";
 import { agentSchema, publisherSchema } from "@/lib/schema";
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 import ListingCard from "@/components/listing/ListingCard";
 import Hero from "@/components/home/Hero";
 import AreaGrid from "@/components/home/AreaGrid";

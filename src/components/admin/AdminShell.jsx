@@ -1,4 +1,4 @@
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 import AdminNav from "@/components/admin/AdminNav";
 
 export default function AdminShell({ title, headerAction, counts, children }) {

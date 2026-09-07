@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Check, Mail, Phone, Undo2 } from "lucide-react";
 import { fetchLeads, saveLeadNotes, setLeadHandled } from "@/services/leads";
 import { relativeDate } from "@/lib/format";
-import PageFallback from "@/components/PageFallback";
+import PageFallback from "@/components/app/PageFallback";
 import AdminShell from "@/components/admin/AdminShell";
 import { inputClasses } from "@/components/ui/Field";
 import { cn } from "@/lib/cn";

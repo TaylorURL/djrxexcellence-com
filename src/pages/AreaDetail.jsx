@@ -6,7 +6,7 @@ import { areaMetaFor } from "@/config/routeMeta";
 import { isConfigured } from "@/lib/supabase";
 import { fetchListings } from "@/services/listings";
 import { breadcrumbSchema } from "@/lib/schema";
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 import ListingCard from "@/components/listing/ListingCard";
 import CommunityCostPanel from "@/components/costs/CommunityCostPanel";
 import LazyMap from "@/components/listing/LazyMap";
