@@ -1,5 +1,5 @@
 import { Moon, Sun, SunMedium } from "lucide-react";
-import { useTheme } from "@/lib/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import { cn } from "@/lib/cn";
 
 const faces = {

@@ -3,7 +3,7 @@ import { render, screen, fireEvent, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Lightbox from "@/components/listing/Lightbox";
 import { CompareProvider, COMPARE_LIMIT } from "@/context/CompareProvider";
-import { useCompare } from "@/lib/useCompare";
+import { useCompare } from "@/hooks/useCompare";
 import ShareBar from "@/components/listing/ShareBar";
 
 const images = [

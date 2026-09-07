@@ -8,7 +8,7 @@ import {
 } from "@/services/listings";
 import { price, relativeDate } from "@/lib/format";
 import { statusLabel } from "@/lib/listingStatus";
-import PageFallback from "@/components/PageFallback";
+import PageFallback from "@/components/app/PageFallback";
 import AdminShell from "@/components/admin/AdminShell";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/cn";

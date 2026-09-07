@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useAuth } from "@/lib/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { isConfigured } from "@/lib/supabase";
 import { submitLead } from "@/services/leads";
 import { contactPhone } from "@/config/site";

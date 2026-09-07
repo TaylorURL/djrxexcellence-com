@@ -6,7 +6,7 @@ import { fetchListingsPage, PAGE_SIZE } from "@/services/listings";
 import { activeFilterCount, paramsToFilters } from "@/lib/listingFilters";
 import { breadcrumbSchema } from "@/lib/schema";
 import { agent, contactPhone, market } from "@/config/site";
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 import ListingCard from "@/components/listing/ListingCard";
 import LazyMap from "@/components/listing/LazyMap";
 import FilterBar from "@/components/listing/FilterBar";

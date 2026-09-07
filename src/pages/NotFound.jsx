@@ -1,5 +1,5 @@
 import Button from "@/components/ui/Button";
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 
 export default function NotFound() {
   return (

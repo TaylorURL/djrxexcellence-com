@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CornerDownRight, EyeOff, Trash2 } from "lucide-react";
-import { useAuth } from "@/lib/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { isConfigured } from "@/lib/supabase";
 import {
   buildThread,

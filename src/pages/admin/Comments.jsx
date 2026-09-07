@@ -7,7 +7,7 @@ import {
   setCommentHidden,
 } from "@/services/comments";
 import { relativeDate } from "@/lib/format";
-import PageFallback from "@/components/PageFallback";
+import PageFallback from "@/components/app/PageFallback";
 import AdminShell from "@/components/admin/AdminShell";
 import { cn } from "@/lib/cn";
 

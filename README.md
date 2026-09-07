@@ -187,10 +187,10 @@ djrxexcellence-com/
 ├── supabase/migrations/   The schema, the policies, and the two hardening passes
 ├── tests/                 Vitest suites
 ├── src/
-│   ├── components/        AgentPortrait, LeadForm, PageFallback, RequireAuth,
-│   │                      ScrollToTop, Seo
+│   ├── components/        AgentPortrait, LeadForm
 │   │   ├── account/       The signed-in shell and its tabs
 │   │   ├── admin/         The dashboard shell, its nav, and the photo manager
+│   │   ├── app/           The route guard, the scroll reset, the fallback skeleton, the head
 │   │   ├── costs/         The carrying-cost panel, the town comparison and its bars
 │   │   ├── home/          Hero, hero search, area grid, testimonials
 │   │   ├── layout/        Header, the mega menu panels, footer, page shell
@@ -201,8 +201,10 @@ djrxexcellence-com/
 │   ├── context/           Auth session, favorites, the comparison tray, the theme
 │   ├── data/              The eight service areas, their districts and ZIP codes,
 │   │                      and what it costs to carry a house in each
+│   ├── hooks/             Auth, favorites, the comparison tray, the theme, and
+│   │                      the carrying-cost inputs the two panels share
 │   ├── lib/               Formatting, filters, mortgage and carrying-cost math,
-│   │                      JSON-LD builders, the Supabase client, the hooks
+│   │                      JSON-LD builders, and the Supabase client
 │   ├── pages/             One file per route, lazily imported
 │   └── services/          Every Supabase read and write
 ├── index.html             Head, font preloads, and the error reporting snippet

@@ -1,9 +1,9 @@
 import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import RequireAuth from "@/components/RequireAuth";
-import ScrollToTop from "@/components/ScrollToTop";
-import PageFallback from "@/components/PageFallback";
+import RequireAuth from "@/components/app/RequireAuth";
+import ScrollToTop from "@/components/app/ScrollToTop";
+import PageFallback from "@/components/app/PageFallback";
 import { routes } from "@/config/routes";
 import Home from "@/pages/Home";
 

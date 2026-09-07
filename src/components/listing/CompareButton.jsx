@@ -1,5 +1,5 @@
 import { Scale } from "lucide-react";
-import { useCompare } from "@/lib/useCompare";
+import { useCompare } from "@/hooks/useCompare";
 import { cn } from "@/lib/cn";
 
 export default function CompareButton({ listingId, className }) {

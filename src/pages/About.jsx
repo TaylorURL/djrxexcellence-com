@@ -8,7 +8,7 @@ import {
   phoneLines,
 } from "@/config/site";
 import { agentSchema } from "@/lib/schema";
-import Seo from "@/components/Seo";
+import Seo from "@/components/app/Seo";
 import AgentPortrait from "@/components/AgentPortrait";
 import Button from "@/components/ui/Button";
 import AreaGrid from "@/components/home/AreaGrid";

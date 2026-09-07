@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { X } from "lucide-react";
 import { isConfigured } from "@/lib/supabase";
 import { fetchListingsByIds, coverImage } from "@/services/listings";
-import { useCompare } from "@/lib/useCompare";
+import { useCompare } from "@/hooks/useCompare";
 import { price, number } from "@/lib/format";
 import { propertyTypeLabel, statusLabel } from "@/lib/listingStatus";
-import Seo from "@/components/Seo";
-import PageFallback from "@/components/PageFallback";
+import Seo from "@/components/app/Seo";
+import PageFallback from "@/components/app/PageFallback";
 import Button from "@/components/ui/Button";
 
 const rows = [

@@ -9,8 +9,8 @@ import {
   User,
   X,
 } from "lucide-react";
-import { useAuth } from "@/lib/useAuth";
-import { useFavorites } from "@/lib/useFavorites";
+import { useAuth } from "@/hooks/useAuth";
+import { useFavorites } from "@/hooks/useFavorites";
 import { areas } from "@/data/areas";
 import { NavPanel, NavTriggers } from "@/components/layout/NavMenu";
 import { agent, brokerage, contactPhone } from "@/config/site";

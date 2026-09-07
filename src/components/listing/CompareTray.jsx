@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Scale, X } from "lucide-react";
-import { useCompare } from "@/lib/useCompare";
+import { useCompare } from "@/hooks/useCompare";
 
 export default function CompareTray() {
   const { count, clear } = useCompare();
