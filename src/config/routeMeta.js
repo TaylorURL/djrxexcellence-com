@@ -4,14 +4,14 @@ import { agent, brokerage, market } from "@/config/site";
  * The title, description and opening line for every route that can be written
  * ahead of a request.
  *
- * Two things read this. `Seo` sets the head as a visitor moves between routes,
- * and `scripts/prerender.js` writes the same values into each route's HTML at
- * build time. Sharing one table is what keeps a crawler and a visitor reading
- * the same page: a social scraper never runs the bundle, so whatever the build
- * wrote is the whole of what it sees.
+ * `scripts/prerender.js` writes every entry into that route's HTML at build
+ * time, which is what a social scraper and most AI readers get: they take the
+ * bytes the server sent and never run the bundle.
  *
- * A route whose title depends on data it has to fetch first is absent here, and
- * `Seo` is the only thing that sets it.
+ * The area routes read the same entries back through `metaFor` and
+ * `areaMetaFor` and hand them to `Seo`, so those pages set one set of strings
+ * from one place. The rest pass their own literals to `Seo`, and a route whose
+ * title depends on data it has to fetch first is absent here entirely.
  */
 export const routeMeta = {
   "/": {

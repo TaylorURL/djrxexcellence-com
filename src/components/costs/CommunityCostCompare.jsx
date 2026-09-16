@@ -29,10 +29,7 @@ const headCell = "sticky top-0 z-10 bg-surface pb-3 pr-4 font-semibold";
 const gridHeadCell =
   "sticky top-0 z-10 bg-surface-sunken px-4 py-3 font-semibold";
 
-export default function CommunityCostCompare({
-  heading,
-  id = "carrying-cost",
-}) {
+export default function CommunityCostCompare() {
   const inputs = useCostInputs();
   const [viewKey, setViewKey] = useState(costViews[0].key);
   const view = viewByKey(viewKey);
@@ -46,12 +43,15 @@ export default function CommunityCostCompare({
 
   return (
     <section
-      id={id}
-      aria-labelledby={`${id}-heading`}
+      id="carrying-cost"
+      aria-labelledby="carrying-cost-heading"
       className="scroll-anchor"
     >
-      <h2 id={`${id}-heading`} className="font-display text-3xl font-semibold">
-        {heading ?? "What the same price costs in each town"}
+      <h2
+        id="carrying-cost-heading"
+        className="font-display text-3xl font-semibold"
+      >
+        What the same price costs in each town
       </h2>
       <p className="mt-3 max-w-measure leading-relaxed text-ink-muted">
         The price is only the part a lender finances. Taxes, insurance and

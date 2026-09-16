@@ -125,11 +125,12 @@ flowchart TD
   `tests/routes.test.jsx` renders every public path in it. A view that is not
   mounted is never in the sitemap, and a route added without a page component
   fails the build.
-- **The head is written twice from one table.** `src/config/routeMeta.js` holds
-  the title, description and opening line for every route that can be known
-  ahead of a request. `Seo` sets them as a visitor moves between routes and
-  `scripts/prerender.js` writes the same values into each route's HTML at build
-  time, so a crawler and a visitor read the same page.
+- **The head a crawler reads comes from a table.** `src/config/routeMeta.js`
+  holds the title, description and opening line for every route that can be
+  known ahead of a request, and `scripts/prerender.js` writes each entry into
+  that route's HTML at build time. The area routes read the same entries back
+  through `metaFor` and `areaMetaFor` and hand them to `Seo`; every other page
+  passes `Seo` its own strings as a visitor arrives.
 - **The rewrite leaves the filesystem alone.** The rule in `vercel.json` sends
   the router's paths to `index.html` and lets the static directories, and
   anything carrying a file extension, fall through. A build asset that is no

@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { isConfigured } from "@/lib/supabase";
 import { fetchListingsByIds, coverImage } from "@/services/listings";
 import { useCompare } from "@/hooks/useCompare";
-import { price, number } from "@/lib/format";
+import { price, number, pricePerSquareFoot } from "@/lib/format";
 import { propertyTypeLabel, statusLabel } from "@/lib/listingStatus";
 import Seo from "@/components/app/Seo";
 import PageFallback from "@/components/app/PageFallback";
@@ -22,10 +22,10 @@ const rows = [
   { label: "Square Feet", read: (listing) => number(listing.square_feet) },
   {
     label: "Price Per Square Foot",
-    read: (listing) =>
-      listing.price && listing.square_feet
-        ? `$${Math.round(listing.price / listing.square_feet)}`
-        : "—",
+    read: (listing) => {
+      const perSquareFoot = pricePerSquareFoot(listing);
+      return perSquareFoot ? `$${perSquareFoot}` : "—";
+    },
   },
   {
     label: "Lot Size",

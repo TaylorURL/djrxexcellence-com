@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Bath, BedDouble, Ruler } from "lucide-react";
-import { price, number } from "@/lib/format";
+import { price, number, pricePerSquareFoot } from "@/lib/format";
 import { statusLabel, statusTone } from "@/lib/listingStatus";
 import { coverImage } from "@/services/listings";
 import { cn } from "@/lib/cn";
@@ -9,10 +9,7 @@ import CompareButton from "@/components/listing/CompareButton";
 
 export default function ListingCard({ listing, eager = false, index = 0 }) {
   const cover = coverImage(listing);
-  const perSquareFoot =
-    listing.price && listing.square_feet
-      ? Math.round(listing.price / listing.square_feet)
-      : null;
+  const perSquareFoot = pricePerSquareFoot(listing);
 
   return (
     <article

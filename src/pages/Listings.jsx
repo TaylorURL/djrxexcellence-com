@@ -20,20 +20,11 @@ const views = [
   { value: "map", label: "Map", Icon: MapIcon },
 ];
 
-function CardSkeleton() {
-  return (
-    <div
-      aria-hidden="true"
-      className="h-[26rem] animate-pulse rounded-2xl bg-surface-sunken"
-    />
-  );
-}
-
 /* The first request does not know how many homes match, so its placeholder is
    the shape of the region rather than a count of cards: three card outlines are
    a claim about the result set made before the result set exists, and whatever
    arrives is measured against them. Once a page is on screen the next one's
-   size is known, and RowSkeleton below draws exactly that many. */
+   size is known, and the button that asked for it carries the wait. */
 function RegionSkeleton() {
   return (
     <div role="status" aria-busy="true">
@@ -42,21 +33,6 @@ function RegionSkeleton() {
         aria-hidden="true"
         className="min-h-[26rem] w-full animate-pulse rounded-2xl bg-surface-sunken"
       />
-    </div>
-  );
-}
-
-function RowSkeleton({ count }) {
-  return (
-    <div
-      role="status"
-      aria-busy="true"
-      className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-    >
-      <span className="sr-only">Loading more listings</span>
-      {Array.from({ length: count }, (_, index) => (
-        <CardSkeleton key={index} />
-      ))}
     </div>
   );
 }
