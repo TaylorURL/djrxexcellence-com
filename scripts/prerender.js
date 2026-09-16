@@ -168,9 +168,27 @@ function shell(route, meta) {
  * shown, and the whole download is charged to the first paint.
  *
  * The entry keeps its early fetch, as a module preload, and loses its script
- * tag. An inline module in its place asks for the bundle one frame after the
+ * tag. An inline script in its place asks for the bundle one frame after the
  * first, which is the first frame the document can have been painted in and
  * the earliest the bundle can no longer hold it back.
+ *
+ * That import is also the whole of the page. Every built file carries a content
+ * hash, so it exists only for the deploy that wrote it and a tab opened across
+ * a release asks for a name that has gone; a dropped connection loses one the
+ * same way. A bare `import()` rejects into nothing when that happens and the
+ * document is left holding the shell, which is written for a crawler and sized
+ * at a pixel, so the reader gets a blank screen. So the boot retries, then
+ * reloads once to pick up the current document and the names it carries, and
+ * failing that unclips the shell, which already holds the headline, the
+ * description and every link the page leads with.
+ *
+ * The reload cannot loop. It happens only when the marker is absent, and the
+ * marker is cleared only by a load that needed no recovery at all.
+ *
+ * It is a classic script rather than a module because a module waits for the
+ * parser, and the stylesheet it watches is parsed before that. A stylesheet
+ * that goes missing leaves the page readable rather than blank, so it takes
+ * the same recovery and never the shell.
  */
 function paintFirst(html) {
   const entry = html.match(
@@ -179,8 +197,67 @@ function paintFirst(html) {
   if (!entry) throw new Error("prerender: the shell carries no module entry");
   const [tag, src] = entry;
   const preload = `    <link rel="modulepreload" crossorigin href="${src}" />\n`;
-  const boot = `    <script type="module">requestAnimationFrame(() => requestAnimationFrame(() => import(${JSON.stringify(src)})))</script>\n`;
+  const boot = `    <script>${bootScript(src)}</script>\n`;
   return html.replace(tag, `${preload}${boot}`);
+}
+
+function bootScript(src) {
+  return `(function () {
+      var src = ${JSON.stringify(src)};
+      var marker = "dj-boot-recovery";
+      var recovering = false;
+
+      function held(value) {
+        try {
+          if (value === null) return sessionStorage.removeItem(marker);
+          if (value !== undefined) sessionStorage.setItem(marker, value);
+          return sessionStorage.getItem(marker);
+        } catch (ignored) {
+          return "1";
+        }
+      }
+
+      function recover() {
+        recovering = true;
+        if (held()) {
+          var shell = document.getElementById("prerender");
+          if (shell) shell.removeAttribute("id");
+          return;
+        }
+        held("1");
+        location.reload();
+      }
+
+      function load(attempt) {
+        return import(src).catch(function (error) {
+          if (attempt >= 2) throw error;
+          return new Promise(function (resolve) {
+            setTimeout(resolve, 300 * (attempt + 1));
+          }).then(function () {
+            return load(attempt + 1);
+          });
+        });
+      }
+
+      addEventListener(
+        "error",
+        function (event) {
+          var node = event.target;
+          if (node && node.tagName === "LINK" && node.rel === "stylesheet") {
+            recover();
+          }
+        },
+        true,
+      );
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          load(0).then(function () {
+            if (!recovering) held(null);
+          }, recover);
+        });
+      });
+    })();`;
 }
 
 function head(route, meta) {
