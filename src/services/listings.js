@@ -11,7 +11,7 @@ const SELECT = `
 
 const PHOTO_BUCKET = "listing-photos";
 
-export const SORTS = {
+const SORTS = {
   newest: { column: "published_at", ascending: false },
   price_desc: { column: "price", ascending: false },
   price_asc: { column: "price", ascending: true },

@@ -3,8 +3,8 @@
  *
  * Run with `npm run brand` and commit what it writes. The lockup splits into a
  * pin and a wordmark, and the pin alone is what a browser tab, a home screen
- * icon and a PWA icon get: the full lockup is five times wider than it is tall,
- * so a square crop of it renders as a smear at 16px.
+ * icon and a PWA icon get: the full lockup is nearly four times wider than it is
+ * tall, so a square crop of it renders as a smear at 16px.
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";

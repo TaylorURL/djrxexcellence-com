@@ -2,12 +2,10 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { areas } from "@/data/areas";
 
-export default function AreaGrid({ limit }) {
-  const shown = limit ? areas.slice(0, limit) : areas;
-
+export default function AreaGrid() {
   return (
     <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {shown.map((area) => (
+      {areas.map((area) => (
         <li key={area.slug}>
           <Link
             to={`/areas/${area.slug}`}

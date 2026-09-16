@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-2026.37.0-DC1C2E?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/version-2026.38.0-DC1C2E?style=for-the-badge" alt="Version" />
   <img src="https://img.shields.io/badge/React-19-DC1C2E?style=for-the-badge&logo=react&logoColor=white" alt="React 19" />
   <img src="https://img.shields.io/badge/Vite-7-DC1C2E?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 7" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-3-DC1C2E?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 3" />
@@ -88,12 +88,16 @@ config tokens the office still has to supply.
 | `npm run dev`             | Start the Vite dev server.                                                                                   |
 | `npm run build`           | Write the sitemap, build to `dist`, then prerender every route.                                              |
 | `npm run preview`         | Serve the built `dist` locally.                                                                              |
-| `npm test`                | Vitest: routes, helpers, interactions, the cost and mortgage math, brand assets, the prerender, the rewrite. |
 | `npm run lint`            | Lint with ESLint.                                                                                            |
+| `npm run lint:fix`        | Lint and apply the fixes ESLint can make itself.                                                             |
+| `npm run format`          | Format the tree with Prettier.                                                                               |
 | `npm run format:check`    | Check formatting without writing, the same check CI runs.                                                    |
+| `npm test`                | Vitest: routes, helpers, interactions, the cost and mortgage math, brand assets, the prerender, the rewrite. |
+| `npm run test:watch`      | The same suites, re-run as files change.                                                                     |
 | `npm run seed`            | Fill a fresh project with eight sample listings and drawn photos.                                            |
 | `npm run verify:policies` | Run the row-level policy assertions against the live project.                                                |
-| `npm run sitemap`         | Write `public/sitemap.xml` and `public/llms.txt`.                                                            |
+| `npm run sitemap`         | Write `public/sitemap.xml` and `public/llms.txt`. `build` runs it first.                                     |
+| `npm run prerender`       | Write one HTML document per route over an existing `dist`. `build` runs it last.                             |
 | `npm run brand`           | Redraw the pin, the lockups and the app icons from the RE/MAX mark.                                          |
 | `npm run terrain`         | Redraw the contour field behind the hero.                                                                    |
 | `npm run social-card`     | Render `public/social-card.png`, the image a link preview shows.                                             |
@@ -121,11 +125,12 @@ flowchart TD
   `tests/routes.test.jsx` renders every public path in it. A view that is not
   mounted is never in the sitemap, and a route added without a page component
   fails the build.
-- **The head is written twice from one table.** `src/config/routeMeta.js` holds
-  the title, description and opening line for every route that can be known
-  ahead of a request. `Seo` sets them as a visitor moves between routes and
-  `scripts/prerender.js` writes the same values into each route's HTML at build
-  time, so a crawler and a visitor read the same page.
+- **The head a crawler reads comes from a table.** `src/config/routeMeta.js`
+  holds the title, description and opening line for every route that can be
+  known ahead of a request, and `scripts/prerender.js` writes each entry into
+  that route's HTML at build time. The area routes read the same entries back
+  through `metaFor` and `areaMetaFor` and hand them to `Seo`; every other page
+  passes `Seo` its own strings as a visitor arrives.
 - **The rewrite leaves the filesystem alone.** The rule in `vercel.json` sends
   the router's paths to `index.html` and lets the static directories, and
   anything carrying a file extension, fall through. A build asset that is no
