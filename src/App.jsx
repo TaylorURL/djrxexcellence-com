@@ -4,8 +4,24 @@ import Layout from "@/components/layout/Layout";
 import RequireAuth from "@/components/app/RequireAuth";
 import ScrollToTop from "@/components/app/ScrollToTop";
 import PageFallback from "@/components/app/PageFallback";
+import PageError from "@/components/app/PageError";
 import { routes } from "@/config/routes";
 import Home from "@/pages/Home";
+
+// A chunk's name carries the hash of what is in it, so it belongs to the deploy
+// that wrote it and to no other. A tab left open across a release asks the next
+// deploy for a file it has never heard of, and a request the connection dropped
+// looks the same from here. One retry clears the second; the first needs the
+// current document, which is what the boundary offers.
+function page(load) {
+  return lazy(() =>
+    load().catch(() =>
+      new Promise((resolve) => {
+        setTimeout(resolve, 300);
+      }).then(load),
+    ),
+  );
+}
 
 // Every other page is split, because a visitor reaches it from a screen that is
 // already painted and pays the chunk's round trip while reading. The home page
@@ -13,30 +29,30 @@ import Home from "@/pages/Home";
 // first visitor a second round trip before anything but the skeleton exists.
 const pages = {
   home: Home,
-  listings: lazy(() => import("@/pages/Listings")),
-  listingDetail: lazy(() => import("@/pages/ListingDetail")),
-  areas: lazy(() => import("@/pages/Areas")),
-  areaDetail: lazy(() => import("@/pages/AreaDetail")),
-  compare: lazy(() => import("@/pages/Compare")),
-  about: lazy(() => import("@/pages/About")),
-  contact: lazy(() => import("@/pages/Contact")),
-  faq: lazy(() => import("@/pages/Faq")),
-  privacy: lazy(() => import("@/pages/legal/Privacy")),
-  terms: lazy(() => import("@/pages/legal/Terms")),
-  accessibility: lazy(() => import("@/pages/legal/Accessibility")),
-  fairHousing: lazy(() => import("@/pages/legal/FairHousing")),
-  signIn: lazy(() => import("@/pages/SignIn")),
-  signUp: lazy(() => import("@/pages/SignUp")),
-  saved: lazy(() => import("@/pages/Saved")),
-  account: lazy(() => import("@/pages/Account")),
-  savedSearches: lazy(() => import("@/pages/account/SavedSearches")),
-  questions: lazy(() => import("@/pages/account/Questions")),
-  dashboard: lazy(() => import("@/pages/admin/Dashboard")),
-  adminLeads: lazy(() => import("@/pages/admin/Leads")),
-  adminComments: lazy(() => import("@/pages/admin/Comments")),
-  adminTestimonials: lazy(() => import("@/pages/admin/Testimonials")),
-  listingEditor: lazy(() => import("@/pages/admin/ListingEditor")),
-  notFound: lazy(() => import("@/pages/NotFound")),
+  listings: page(() => import("@/pages/Listings")),
+  listingDetail: page(() => import("@/pages/ListingDetail")),
+  areas: page(() => import("@/pages/Areas")),
+  areaDetail: page(() => import("@/pages/AreaDetail")),
+  compare: page(() => import("@/pages/Compare")),
+  about: page(() => import("@/pages/About")),
+  contact: page(() => import("@/pages/Contact")),
+  faq: page(() => import("@/pages/Faq")),
+  privacy: page(() => import("@/pages/legal/Privacy")),
+  terms: page(() => import("@/pages/legal/Terms")),
+  accessibility: page(() => import("@/pages/legal/Accessibility")),
+  fairHousing: page(() => import("@/pages/legal/FairHousing")),
+  signIn: page(() => import("@/pages/SignIn")),
+  signUp: page(() => import("@/pages/SignUp")),
+  saved: page(() => import("@/pages/Saved")),
+  account: page(() => import("@/pages/Account")),
+  savedSearches: page(() => import("@/pages/account/SavedSearches")),
+  questions: page(() => import("@/pages/account/Questions")),
+  dashboard: page(() => import("@/pages/admin/Dashboard")),
+  adminLeads: page(() => import("@/pages/admin/Leads")),
+  adminComments: page(() => import("@/pages/admin/Comments")),
+  adminTestimonials: page(() => import("@/pages/admin/Testimonials")),
+  listingEditor: page(() => import("@/pages/admin/ListingEditor")),
+  notFound: page(() => import("@/pages/NotFound")),
 };
 
 function element(route) {
@@ -55,17 +71,19 @@ export default function App() {
     <>
       <ScrollToTop />
       <Layout>
-        <Suspense fallback={<PageFallback />}>
-          <Routes>
-            {routes.map((route) => (
-              <Route
-                key={route.key}
-                path={route.path}
-                element={element(route)}
-              />
-            ))}
-          </Routes>
-        </Suspense>
+        <PageError>
+          <Suspense fallback={<PageFallback />}>
+            <Routes>
+              {routes.map((route) => (
+                <Route
+                  key={route.key}
+                  path={route.path}
+                  element={element(route)}
+                />
+              ))}
+            </Routes>
+          </Suspense>
+        </PageError>
       </Layout>
     </>
   );
