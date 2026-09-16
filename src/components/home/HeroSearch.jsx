@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { areas } from "@/data/areas";
 import { SEARCH_HINT } from "@/lib/listingFilters";
+import { price } from "@/lib/format";
 import Button from "@/components/ui/Button";
 import { inputClassesDark } from "@/components/ui/Field";
 import { cn } from "@/lib/cn";
@@ -56,7 +57,7 @@ export default function HeroSearch() {
             <option value="">Any Price</option>
             {priceCaps.map((cap) => (
               <option key={cap} value={cap}>
-                Up to ${cap.toLocaleString("en-US")}
+                Up to {price(cap)}
               </option>
             ))}
           </select>

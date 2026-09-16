@@ -4,14 +4,14 @@ const currency = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,
 });
 
-const compact = new Intl.NumberFormat("en-US");
+const grouped = new Intl.NumberFormat("en-US");
 
 export function price(value) {
   return typeof value === "number" ? currency.format(value) : "Call for price";
 }
 
 export function number(value) {
-  return typeof value === "number" ? compact.format(value) : "—";
+  return typeof value === "number" ? grouped.format(value) : "—";
 }
 
 /**
@@ -22,6 +22,17 @@ export function duesRange({ monthlyLow, monthlyHigh }) {
   if (!(monthlyHigh > 0)) return "None";
   if (!(monthlyLow > 0)) return `Up to ${price(monthlyHigh)}`;
   return `${price(monthlyLow)} to ${price(monthlyHigh)}`;
+}
+
+/**
+ * What a listing costs per square foot, or null where either figure is missing.
+ *
+ * The card and the comparison table print it differently, so the rounding lives
+ * here and the wording stays with each of them.
+ */
+export function pricePerSquareFoot(listing) {
+  if (!listing?.price || !listing?.square_feet) return null;
+  return Math.round(listing.price / listing.square_feet);
 }
 
 export function address(listing) {
