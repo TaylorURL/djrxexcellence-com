@@ -88,12 +88,16 @@ config tokens the office still has to supply.
 | `npm run dev`             | Start the Vite dev server.                                                                                   |
 | `npm run build`           | Write the sitemap, build to `dist`, then prerender every route.                                              |
 | `npm run preview`         | Serve the built `dist` locally.                                                                              |
-| `npm test`                | Vitest: routes, helpers, interactions, the cost and mortgage math, brand assets, the prerender, the rewrite. |
 | `npm run lint`            | Lint with ESLint.                                                                                            |
+| `npm run lint:fix`        | Lint and apply the fixes ESLint can make itself.                                                             |
+| `npm run format`          | Format the tree with Prettier.                                                                               |
 | `npm run format:check`    | Check formatting without writing, the same check CI runs.                                                    |
+| `npm test`                | Vitest: routes, helpers, interactions, the cost and mortgage math, brand assets, the prerender, the rewrite. |
+| `npm run test:watch`      | The same suites, re-run as files change.                                                                     |
 | `npm run seed`            | Fill a fresh project with eight sample listings and drawn photos.                                            |
 | `npm run verify:policies` | Run the row-level policy assertions against the live project.                                                |
-| `npm run sitemap`         | Write `public/sitemap.xml` and `public/llms.txt`.                                                            |
+| `npm run sitemap`         | Write `public/sitemap.xml` and `public/llms.txt`. `build` runs it first.                                     |
+| `npm run prerender`       | Write one HTML document per route over an existing `dist`. `build` runs it last.                             |
 | `npm run brand`           | Redraw the pin, the lockups and the app icons from the RE/MAX mark.                                          |
 | `npm run terrain`         | Redraw the contour field behind the hero.                                                                    |
 | `npm run social-card`     | Render `public/social-card.png`, the image a link preview shows.                                             |

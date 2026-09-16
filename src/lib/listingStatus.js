@@ -6,7 +6,7 @@ export const STATUS_LABELS = {
   off_market: "Off Market",
 };
 
-export const STATUS_TONES = {
+const STATUS_TONES = {
   coming_soon: "bg-brand-blue text-on-accent",
   active: "bg-brand-red text-on-accent",
   pending: "bg-brand-red-light text-ink",

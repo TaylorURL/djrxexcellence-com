@@ -1,6 +1,6 @@
 import Seo from "@/components/app/Seo";
 
-export const LAST_UPDATED = "August 26, 2026";
+const LAST_UPDATED = "August 26, 2026";
 
 export default function LegalPage({ title, description, updated, children }) {
   return (

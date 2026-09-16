@@ -4,7 +4,7 @@
  */
 export const SEARCH_HINT = "Address, city, ZIP, or MLS number";
 
-export const FILTER_KEYS = [
+const FILTER_KEYS = [
   "q",
   "city",
   "type",
