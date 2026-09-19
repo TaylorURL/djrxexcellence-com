@@ -260,6 +260,56 @@ function bootScript(src) {
     })();`;
 }
 
+/**
+ * Both image preloads are the home hero's alone. The portrait pair is written
+ * for the hero's box, and About lays the same component out at page width
+ * below the large breakpoint, where the preload would resolve a candidate that
+ * page never asks for; no other route renders the portrait at all. The contour
+ * texture, preloaded anywhere else, is 28 KB fetched at high priority for
+ * nothing on the page, and a hint nothing consumes is one the browser drops -
+ * which it announces as a failed load on the link, in front of the requests the
+ * page is actually waiting on.
+ */
+function withoutHeroPreloads(html) {
+  return html
+    .replace(
+      /(?:[ \t]*<!--(?:(?!-->)[\s\S])*?-->\n)?[ \t]*<link\s[^>]*?\/agent\/dylan-jordan[^>]*?>\n\n?/,
+      "",
+    )
+    .replace(
+      /(?:[ \t]*<!--(?:(?!-->)[\s\S])*?-->\n)?[ \t]*<link\s[^>]*?\/art\/terrain\.svg[^>]*?>\n\n?/,
+      "",
+    );
+}
+
+/**
+ * The document every path without one of its own is answered with.
+ *
+ * The rewrite used to name `index.html` here, which is the home page: Compare,
+ * the two sign-in pages, the member and agent pages and every URL nobody has a
+ * page for were all served the home document, head and all. So each of them
+ * carried the home hero's two image preloads - a portrait and a 28 KB contour
+ * texture, both at high priority, on pages that draw neither - and claimed the
+ * home page's canonical as their own. Stripping the preloads per route did
+ * nothing for any of them, because none of them was a route the prerender
+ * wrote.
+ *
+ * This is the same shell with the hero's hints gone and with no claim in it.
+ * The canonical and the card URL are removed rather than corrected, because one
+ * document stands in for many addresses and cannot honestly name any of them;
+ * the bundle sets both from the route as it mounts. It says `noindex` for the
+ * moment before that.
+ */
+function fallback(template) {
+  return withoutHeroPreloads(template)
+    .replace(/[ \t]*<link rel="canonical"[^>]*>\n/, "")
+    .replace(/[ \t]*<meta property="og:url"[^>]*>\n/, "")
+    .replace(
+      /([ \t]*)<meta name="viewport"/,
+      '$1<meta name="robots" content="noindex" />\n$1<meta name="viewport"',
+    );
+}
+
 function head(route, meta) {
   const url = `${origin}${route === "/" ? "/" : route}`;
   const title = `${meta.title} | Dylan Jordan, RE/MAX Excellence`;
@@ -314,24 +364,7 @@ async function main() {
       );
     }
 
-    // Both image preloads are the home hero's alone. The portrait pair is
-    // written for the hero's box, and About lays the same component out at
-    // page width below the large breakpoint, where the preload would resolve a
-    // candidate that page never asks for; no other route renders the portrait
-    // at all. The contour texture, preloaded anywhere else, is 28 KB fetched
-    // for nothing on the page and a warning in the console once the browser
-    // notices nothing drew it.
-    if (route !== "/") {
-      html = html
-        .replace(
-          /(?:[ \t]*<!--(?:(?!-->)[\s\S])*?-->\n)?[ \t]*<link\s[^>]*?\/agent\/dylan-jordan[^>]*?>\n\n?/,
-          "",
-        )
-        .replace(
-          /(?:[ \t]*<!--(?:(?!-->)[\s\S])*?-->\n)?[ \t]*<link\s[^>]*?\/art\/terrain\.svg[^>]*?>\n\n?/,
-          "",
-        );
-    }
+    if (route !== "/") html = withoutHeroPreloads(html);
 
     const target =
       route === "/"
@@ -342,7 +375,9 @@ async function main() {
     written += 1;
   }
 
-  console.log(`prerendered ${written} route(s)`);
+  await fs.writeFile(path.join(dist, "app.html"), fallback(template));
+
+  console.log(`prerendered ${written} route(s), and the fallback shell`);
 }
 
 main().catch((error) => {

@@ -69,9 +69,39 @@ describe.skipIf(!built)("prerendered routes", () => {
 });
 
 /**
- * A published URL with no document of its own falls through the rewrite to
- * `dist/index.html` and answers with the home page's canonical, which makes it
- * a duplicate of the home page rather than a page in its own right.
+ * Compare, the sign-in pages, every member and agent page and every URL with no
+ * page at all reach the browser through the rewrite, which named `index.html`
+ * until this shell existed. That handed all of them the home document: the home
+ * page's canonical, and the hero's portrait and contour texture as preloads at
+ * high priority on pages that draw neither. A preload nothing consumes is one
+ * the browser drops, and it announces the drop as a failed load on the link.
+ */
+describe.skipIf(!built)("the fallback shell", () => {
+  const shell = built
+    ? fs.readFileSync(path.join(dist, "app.html"), "utf8")
+    : "";
+
+  it("carries neither of the home hero's image preloads", () => {
+    expect(shell).not.toContain("/art/terrain.svg");
+    expect(shell).not.toContain("/agent/dylan-jordan");
+  });
+
+  it("claims no canonical of its own", () => {
+    expect(shell).not.toContain('rel="canonical"');
+    expect(shell).not.toContain('property="og:url"');
+    expect(shell).toContain('<meta name="robots" content="noindex" />');
+  });
+
+  it("still boots the bundle", () => {
+    expect(shell).toContain('rel="modulepreload"');
+    expect(shell).toContain('<div id="root"></div>');
+  });
+});
+
+/**
+ * A published URL with no document of its own falls through the rewrite to the
+ * shell, which claims no canonical at all, leaving it a page a crawler cannot
+ * place rather than a page in its own right.
  */
 describe.skipIf(!built)("every sitemap URL is a document of its own", () => {
   for (const route of published) {
