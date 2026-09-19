@@ -165,6 +165,10 @@
         var unloading = false;
         var worker = null;
         var workerFailed = false;
+        // Taken before the wrapper at the foot of this script replaces it, so
+        // asking whether a file is there cannot report itself as a network
+        // failure on the way to the answer.
+        var rawFetch = window.fetch ? window.fetch.bind(window) : null;
         function transport() {
           if (worker || workerFailed) return worker;
           try {
@@ -271,6 +275,48 @@
           location.reload();
           return true;
         }
+        // A preload, a modulepreload and a prefetch are hints rather than
+        // loads. The browser is free to drop one it decides not to keep - a
+        // crawler on a resource budget drops them wholesale - and the page
+        // then fetches the same file through the import, the stylesheet or the
+        // background that actually wanted it. Chrome raises `error` on the
+        // discarded link either way, so the event alone says nothing about
+        // whether the file is there, and acting on it costs twice over: the
+        // report describes a page that rendered perfectly well, and the reload
+        // below throws away a document the reader was already looking at.
+        var speculative = {
+          preload: 1,
+          modulepreload: 1,
+          prefetch: 1,
+          prerender: 1,
+        };
+        function isHint(node) {
+          if (!node.getAttribute || node.tagName.toLowerCase() !== "link")
+            return false;
+          var rel = String(node.getAttribute("rel") || "")
+            .toLowerCase()
+            .split(/\s+/);
+          for (var i = 0; i < rel.length; i += 1) {
+            if (speculative[rel[i]]) return true;
+          }
+          return false;
+        }
+        // So ask for the file before calling it missing. This is the same
+        // request the page itself would make, cache and all, so a file the
+        // browser already holds answers from there; only one that genuinely
+        // will not come reaches the queue.
+        function ifGone(url, gone) {
+          if (!rawFetch) return gone();
+          try {
+            rawFetch(url, { credentials: "same-origin" }).then(function (
+              response,
+            ) {
+              if (!response.ok) gone();
+            }, gone);
+          } catch (ignored) {
+            gone();
+          }
+        }
         // Capture phase, because element load failures fire error events that do not bubble.
         window.addEventListener(
           "error",
@@ -282,14 +328,19 @@
                 event.target.tagName
               ) {
                 var target = event.target.src || event.target.href || "";
-                if (target.indexOf("/assets/") > -1 && staleReload()) return;
-                report(
-                  "resource",
-                  "Failed to load " +
-                    event.target.tagName.toLowerCase() +
-                    ": " +
-                    target,
-                );
+                var name = event.target.tagName.toLowerCase();
+                var fail = function () {
+                  if (target.indexOf("/assets/") > -1 && staleReload()) return;
+                  report("resource", "Failed to load " + name + ": " + target);
+                };
+                if (target && isHint(event.target)) {
+                  // Kept on the page either way, so a live console still
+                  // answers what the browser dropped and when.
+                  hold("hint", "Dropped hint " + name + ": " + target);
+                  ifGone(target, fail);
+                  return;
+                }
+                fail();
               } else {
                 report(
                   "uncaught",
