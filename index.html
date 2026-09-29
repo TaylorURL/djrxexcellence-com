@@ -158,6 +158,24 @@
           }
           return true;
         }
+        // The browser raises one of these at the window when a ResizeObserver's
+        // callbacks are still dirtying layout after its iteration cap, and it
+        // carries no stack because no script threw. The notification says
+        // delivery was cut short for that frame; the observations left over
+        // arrive on the next one, so layout settles either way and the reader
+        // sees a page that rendered correctly. Nothing this site ships builds a
+        // ResizeObserver, so the loop is never the page's own - it belongs to
+        // whatever is driving the browser, and a crawler measuring the document
+        // as it paints is the usual one. Reported as an uncaught error it files
+        // a defect against a site that has none, so it stays on the page and
+        // off the wire. A stack means a script really did throw, and that
+        // still reports.
+        function resizeObserverNotice(message, stack) {
+          if (stack) return false;
+          return /^ResizeObserver loop (limit exceeded|completed with undelivered notifications)/.test(
+            String(message || "").replace(/^Uncaught\s+/, ""),
+          );
+        }
         // A request the page makes writes its own failure to the console when it
         // fails, and a collector that cannot be reached would then be the loudest
         // thing on the page. The same request issued inside a worker writes
@@ -341,6 +359,15 @@
                   return;
                 }
                 fail();
+              } else if (
+                resizeObserverNotice(
+                  event.message,
+                  event.error && event.error.stack,
+                )
+              ) {
+                // Kept on the page either way, so a live console still answers
+                // what the browser raised and when.
+                hold("resize-observer", event.message);
               } else {
                 report(
                   "uncaught",
