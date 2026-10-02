@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { areas } from "@/data/areas";
+import Art from "@/components/Art";
 
 const buySearches = [
   { to: "/listings", label: "All Listings" },
@@ -53,10 +54,8 @@ function MenuLink({ to, label }) {
 function MenuFeature({ art, title, body, to, action }) {
   return (
     <div className="flex items-center gap-6 bg-surface-raised p-6">
-      <img
+      <Art
         src={`/art/${art}.svg`}
-        alt=""
-        aria-hidden="true"
         width={120}
         height={120}
         loading="lazy"
