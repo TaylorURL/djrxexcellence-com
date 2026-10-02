@@ -6,6 +6,7 @@ import { isConfigured } from "@/lib/supabase";
 import { fetchListings } from "@/services/listings";
 import { fetchPublishedTestimonials } from "@/services/testimonials";
 import { agentSchema, publisherSchema } from "@/lib/schema";
+import Art from "@/components/Art";
 import Seo from "@/components/app/Seo";
 import ListingCard from "@/components/listing/ListingCard";
 import Hero from "@/components/home/Hero";
@@ -64,10 +65,8 @@ export default function Home() {
       <section className="page-shell py-20">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="flex items-start gap-5">
-            <img
+            <Art
               src="/art/map.svg"
-              alt=""
-              aria-hidden="true"
               width={150}
               height={130}
               loading="lazy"
@@ -129,10 +128,8 @@ export default function Home() {
               key={title}
               className="flex flex-col gap-4 rounded-2xl border border-surface-line bg-surface-raised p-6"
             >
-              <img
+              <Art
                 src={`/art/${art}.svg`}
-                alt=""
-                aria-hidden="true"
                 width={72}
                 height={72}
                 loading="lazy"
@@ -157,10 +154,8 @@ export default function Home() {
       >
         <div className="grid gap-12 rounded-2xl border border-surface-line bg-surface p-8 shadow-card lg:grid-cols-2 lg:p-12">
           <div className="space-y-4">
-            <img
+            <Art
               src="/art/checklist.svg"
-              alt=""
-              aria-hidden="true"
               width={130}
               height={150}
               loading="lazy"

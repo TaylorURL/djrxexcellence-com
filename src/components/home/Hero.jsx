@@ -1,5 +1,6 @@
 import { agent, brokerage, market } from "@/config/site";
 import AgentPortrait from "@/components/AgentPortrait";
+import Art from "@/components/Art";
 import HeroSearch from "@/components/home/HeroSearch";
 
 export default function Hero() {
@@ -34,10 +35,8 @@ export default function Hero() {
             <AgentPortrait className="h-full w-full" priority />
           </div>
 
-          <img
+          <Art
             src="/art/sign.svg"
-            alt=""
-            aria-hidden="true"
             width={140}
             height={150}
             className="pointer-events-none absolute -right-4 top-6 hidden w-24 sm:block"
@@ -45,10 +44,8 @@ export default function Hero() {
 
           <div className="absolute -bottom-6 -left-4 rounded-2xl bg-surface px-5 py-4 text-ink shadow-lift sm:-left-6">
             <div className="flex items-center gap-3">
-              <img
+              <Art
                 src="/brand/remax-pin.svg"
-                alt=""
-                aria-hidden="true"
                 width={26}
                 height={29}
                 className="h-7 w-auto"

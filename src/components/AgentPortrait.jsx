@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { agent } from "@/config/site";
 import { cn } from "@/lib/cn";
 
@@ -20,16 +20,38 @@ const stem = agent.headshot.replace(/\.[a-z]+$/i, "");
  */
 const heroSizes = "(min-width: 1024px) 24rem, 22rem";
 
+/** How long to wait before asking for the portrait again. */
+const RETRY_MS = 800;
+
 /**
  * The portrait falls back to the monogram the header uses when the headshot
- * file is absent, so a missing image is never a broken one.
+ * file is absent, so a missing image is never a broken one. It asks a second
+ * time first: a connection that drops mid-load fails the file exactly the way
+ * a missing one does, and swapping a photograph the site has for a monogram
+ * over one lost second is the wrong read of the two.
  */
 export default function AgentPortrait({
   className,
   priority = false,
   sizes = heroSizes,
 }) {
+  const [attempt, setAttempt] = useState(0);
   const [failed, setFailed] = useState(false);
+  const timer = useRef(null);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  // Empty on the first attempt, so the candidate this resolves stays the one
+  // the head preload in index.html already asked for.
+  const retry = attempt === 0 ? "" : `?retry=${attempt}`;
+
+  function askAgain() {
+    if (attempt > 0) {
+      setFailed(true);
+      return;
+    }
+    timer.current = setTimeout(() => setAttempt(1), RETRY_MS);
+  }
 
   if (failed) {
     return (
@@ -47,20 +69,20 @@ export default function AgentPortrait({
   }
 
   return (
-    <picture>
+    <picture key={attempt}>
       <source
         type="image/webp"
-        srcSet={`${stem}-500.webp 500w, ${stem}-720.webp 720w, ${stem}.webp 1000w`}
+        srcSet={`${stem}-500.webp${retry} 500w, ${stem}-720.webp${retry} 720w, ${stem}.webp${retry} 1000w`}
         sizes={sizes}
       />
       <img
-        src={agent.headshot}
+        src={`${agent.headshot}${retry}`}
         alt={`${agent.name}, ${agent.title}`}
         width={1000}
         height={1250}
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}
-        onError={() => setFailed(true)}
+        onError={askAgain}
         className={cn("bg-surface-sunken object-cover", className)}
       />
     </picture>

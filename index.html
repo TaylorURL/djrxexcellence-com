@@ -358,6 +358,19 @@
                   ifGone(target, fail);
                   return;
                 }
+                // The same ambiguity, on the elements that load a file for
+                // real. An `error` here means the file is missing or the
+                // connection carrying it dropped, and the event does not say
+                // which. A dropped connection fails every request in flight
+                // on it at the same moment, so one lost second arrives as a
+                // page's whole set of images at once rather than as one file.
+                // Ask before calling any of them missing. A build asset is
+                // the exception: a missing one is answered by reloading onto
+                // the current build, and that is worth doing straight away.
+                if (target && target.indexOf("/assets/") === -1) {
+                  ifGone(target, fail);
+                  return;
+                }
                 fail();
               } else if (
                 resizeObserverNotice(
