@@ -283,6 +283,7 @@
         // hashes and the interaction continues; a failure that survives that
         // reload is a real defect and reaches the queue as one.
         var reloadKey = "dj-stale-reload";
+        var recovering = false;
         function staleReload() {
           try {
             if (sessionStorage.getItem(reloadKey)) return false;
@@ -293,6 +294,19 @@
           location.reload();
           return true;
         }
+        // And the marker is given back. It is there to stop a reload looping,
+        // so it has to outlive the reload and no longer: left set for the life
+        // of the tab, as it was, the first hiccup of a session spends the one
+        // recovery a visitor gets and every later one goes straight to the
+        // queue with the page still broken. A load that reached the end
+        // needing no recovery at all is the proof the document is sound, and
+        // it clears the marker.
+        addEventListener("load", function () {
+          if (recovering) return;
+          try {
+            sessionStorage.removeItem(reloadKey);
+          } catch (ignored) {}
+        });
         // A preload, a modulepreload and a prefetch are hints rather than
         // loads. The browser is free to drop one it decides not to keep - a
         // crawler on a resource budget drops them wholesale - and the page
@@ -322,14 +336,20 @@
         // So ask for the file before calling it missing. This is the same
         // request the page itself would make, cache and all, so a file the
         // browser already holds answers from there; only one that genuinely
-        // will not come reaches the queue.
-        function ifGone(url, gone) {
+        // will not come reaches the queue. A file that answers took `kept`,
+        // because the page still lost it for that frame and a live console is
+        // owed the reason.
+        function ifGone(url, gone, kept) {
           if (!rawFetch) return gone();
           try {
             rawFetch(url, { credentials: "same-origin" }).then(function (
               response,
             ) {
-              if (!response.ok) gone();
+              if (response.ok) {
+                if (kept) kept();
+              } else {
+                gone();
+              }
             }, gone);
           } catch (ignored) {
             gone();
@@ -347,6 +367,11 @@
               ) {
                 var target = event.target.src || event.target.href || "";
                 var name = event.target.tagName.toLowerCase();
+                // Set here rather than inside the reload, because the check
+                // below is a round trip and `load` does not wait for it. A
+                // document that cleared the marker and then reloaded would
+                // arrive able to clear it again, which is a loop.
+                if (target) recovering = true;
                 var fail = function () {
                   if (target.indexOf("/assets/") > -1 && staleReload()) return;
                   report("resource", "Failed to load " + name + ": " + target);
@@ -364,11 +389,20 @@
                 // which. A dropped connection fails every request in flight
                 // on it at the same moment, so one lost second arrives as a
                 // page's whole set of images at once rather than as one file.
-                // Ask before calling any of them missing. A build asset is
-                // the exception: a missing one is answered by reloading onto
-                // the current build, and that is worth doing straight away.
-                if (target && target.indexOf("/assets/") === -1) {
-                  ifGone(target, fail);
+                // Ask before calling any of them missing - a build asset
+                // included. It used to be the exception, on the reasoning
+                // that a build asset only ever goes missing when the document
+                // naming it is stale, so a reload is the answer and is worth
+                // taking straight away. A hashed name that the current
+                // document still carries disproves that: the file is there,
+                // the document is current, and the reload throws away a page
+                // the reader was looking at over one lost second. The reload
+                // is still the answer when the file is genuinely gone, which
+                // is the only case that reaches `fail` now.
+                if (target) {
+                  ifGone(target, fail, function () {
+                    hold("resource", "Recovered " + name + ": " + target);
+                  });
                   return;
                 }
                 fail();
