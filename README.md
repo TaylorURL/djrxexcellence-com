@@ -39,6 +39,8 @@ Without the Supabase values the site still builds and runs, and the pages that n
 
 React 19, React Router 7, Vite 7, Tailwind CSS 3, Supabase and Leaflet with OpenStreetMap. Hosted on Vercel.
 
----
+## License
 
-Built and maintained by [TaylorURL](https://www.taylorurl.com). Proprietary, see [LICENSE.md](LICENSE.md).
+Proprietary. Copyright (c) 2026 TaylorURL LLC, all rights reserved. See [LICENSE.md](LICENSE.md).
+
+Built and maintained by [TaylorURL](https://www.taylorurl.com).
