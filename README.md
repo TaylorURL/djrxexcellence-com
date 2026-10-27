@@ -8,7 +8,8 @@
 
 Dylan sells homes in Dayton and the towns around it: Liberty, Mont Belvieu, Baytown, Crosby, Huffman, Cleveland and Hardin. Buyers can search his listings, save the ones they like and ask him questions right on the listing page. Dylan runs the listings, leads and comments from an admin dashboard on the same site.
 
-## What's on the site
+<details>
+<summary>What's on the site</summary>
 
 - Listings with filters, a map view, a photo gallery and a mortgage calculator
 - Buyer accounts for saving homes and searches, and a side-by-side comparison of up to four homes
@@ -17,7 +18,10 @@ Dylan sells homes in Dayton and the towns around it: Liberty, Mont Belvieu, Bayt
 - Forms to request a showing, ask about a town or get a home valuation
 - An admin dashboard at `/admin` where Dylan adds listings, uploads and reorders photos, works leads, moderates comments and posts testimonials
 
-## Running it locally
+</details>
+
+<details>
+<summary>Running it locally</summary>
 
 You need Node 22 and a Supabase project.
 
@@ -35,12 +39,17 @@ npm test
 
 Without the Supabase values the site still builds and runs, and the pages that need the database say it isn't set up. [docs/SETUP.md](docs/SETUP.md) covers creating the Supabase project, applying the migrations in `supabase/migrations/` and seeding sample listings with `npm run seed`.
 
+</details>
+
 ## Built with
 
 React 19, React Router 7, Vite 7, Tailwind CSS 3, Supabase and Leaflet with OpenStreetMap. Hosted on Vercel.
 
-## License
+<details>
+<summary>License</summary>
 
 Proprietary. Copyright (c) 2026 TaylorURL LLC, all rights reserved. See [LICENSE.md](LICENSE.md).
+
+</details>
 
 Built and maintained by [TaylorURL](https://www.taylorurl.com).
