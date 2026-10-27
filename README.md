@@ -3,7 +3,7 @@
 <p align="center">Website for Dylan Jordan, a RE/MAX Excellence agent in Dayton, Texas.</p>
 <p align="center"><a href="https://djrxexcellence.com">djrxexcellence.com</a></p>
 <p align="center">
-  <img src="https://img.shields.io/badge/version-2026.43.0-DC1C2E?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/version-2026.44.0-DC1C2E?style=for-the-badge" alt="Version" />
 </p>
 
 Dylan sells homes in Dayton and the towns around it: Liberty, Mont Belvieu, Baytown, Crosby, Huffman, Cleveland and Hardin. Buyers can search his listings, save the ones they like and ask him questions right on the listing page. Dylan runs the listings, leads and comments from an admin dashboard on the same site.
