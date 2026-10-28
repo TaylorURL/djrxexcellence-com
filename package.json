@@ -3,7 +3,7 @@
   "private": true,
   "license": "UNLICENSED",
   "version": "2026.44.0",
-  "description": "Real estate site for Dylan Jordan of RE/MAX Excellence in Dayton, Texas.",
+  "description": "Real estate site for Dylan Jordan of RE/MAX Excellence in Dayton, Texas",
   "type": "module",
   "scripts": {
     "dev": "vite",
