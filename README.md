@@ -6,7 +6,7 @@ Website for Dylan Jordan, a RE/MAX Excellence agent in Dayton, Texas.
 
 [djrxexcellence.com](https://djrxexcellence.com)
 
-<img src="https://img.shields.io/badge/version-2026.44.0-DC1C2E?style=for-the-badge" alt="Version" />
+<img src="https://img.shields.io/badge/version-2026.44.1-DC1C2E?style=for-the-badge" alt="Version" />
 
 Listings for Dayton and the towns around it, with buyer accounts and an agent dashboard. React single-page app on Supabase. Every public route is also written out as static HTML at build time.
 
