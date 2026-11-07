@@ -21,7 +21,7 @@ const source = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
   .map((match) => match[1])
   .find((body) => body.includes("window.__reporter"));
 
-function start({ answers = true } = {}) {
+function start({ answers = true, drops = 0 } = {}) {
   const reloaded = vi.fn();
   const sent = [];
   const store = new Map();
@@ -38,8 +38,15 @@ function start({ answers = true } = {}) {
   };
 
   const fetches = [];
+  let dropped = 0;
   window.fetch = vi.fn((url) => {
     fetches.push(String(url));
+    if (dropped < drops) {
+      dropped += 1;
+      // What a dropped connection does: the request never reaches a server,
+      // so there is no status to read and the promise rejects.
+      return Promise.reject(new TypeError("Failed to fetch"));
+    }
     return Promise.resolve({ ok: answers, status: answers ? 200 : 404 });
   });
   navigator.sendBeacon = vi.fn((endpoint, body) => {
@@ -87,6 +94,9 @@ function failed(rel, href) {
 }
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+// The asking backs off 300ms and then 600ms, so riding a lost second out
+// takes a shade under a second of wall clock.
+const rideItOut = () => new Promise((resolve) => setTimeout(resolve, 1400));
 
 let session = null;
 
@@ -168,5 +178,78 @@ describe("the one reload a visitor gets", () => {
     window.dispatchEvent(new Event("load"));
     await settle();
     expect(session.store.get("dj-stale-reload")).toBe("1");
+  });
+});
+
+/**
+ * The connection itself dropping is the case these reports have always been,
+ * and it is the one case the eight tests above never put the reporter in: all
+ * of them answer the asking, with a 200 or with a 404. A dropped connection
+ * answers neither. It fails the asking for the very reason it failed the
+ * element's own load, so a reporter that reads a silence as a 404 falls
+ * straight back onto the behaviour the asking was added to replace - reload
+ * the page the reader is looking at, then file a report naming a file that is
+ * present and answering.
+ */
+describe("a lost second rather than a lost file", () => {
+  it("does not call a file gone because the asking went unanswered", async () => {
+    session = start({ drops: 99 });
+    failed("stylesheet", "/assets/index-Cj-iSej8.css");
+    await settle();
+    expect(session.reloaded).not.toHaveBeenCalled();
+    expect(session.sent).toEqual([]);
+  });
+
+  it("asks again, on a backoff, rather than once", async () => {
+    session = start({ drops: 99 });
+    failed("stylesheet", "/assets/index-Cj-iSej8.css");
+    await rideItOut();
+    expect(session.fetches).toHaveLength(3);
+  });
+
+  it("rides the drop out and keeps the page, when the file comes back", async () => {
+    session = start({ drops: 1, answers: true });
+    failed("stylesheet", "/assets/index-Cj-iSej8.css");
+    await rideItOut();
+    expect(session.reloaded).not.toHaveBeenCalled();
+    expect(session.sent).toEqual([]);
+  });
+
+  it("puts the stylesheet back on the page rather than only logging it", async () => {
+    session = start({ drops: 1, answers: true });
+    failed("stylesheet", "/assets/index-Cj-iSej8.css");
+    await rideItOut();
+    const back = document.head.querySelector("link[data-dj-refit]");
+    expect(back).not.toBeNull();
+    expect(back.getAttribute("href")).toBe("/assets/index-Cj-iSej8.css");
+  });
+
+  it("gives the one reload back after a drop it recovered from", async () => {
+    session = start({ drops: 1, answers: true });
+    session.store.set("dj-stale-reload", "1");
+    failed("stylesheet", "/assets/index-Cj-iSej8.css");
+    window.dispatchEvent(new Event("load"));
+    await rideItOut();
+    expect(session.store.has("dj-stale-reload")).toBe(false);
+  });
+
+  it("still files, once the asking is spent and the file never came", async () => {
+    session = start({ drops: 99 });
+    session.store.set("dj-stale-reload", "1");
+    failed("stylesheet", "/assets/index-Cj-iSej8.css");
+    await rideItOut();
+    expect(session.sent.map((report) => report.message)).toEqual([
+      "Failed to load link: http://localhost:3000/assets/index-Cj-iSej8.css",
+    ]);
+  });
+
+  it("does not spend the three links' worth of reports on one lost second", async () => {
+    session = start({ drops: 1, answers: true });
+    failed("modulepreload", "/assets/index-BZXaTmr-.js");
+    failed("modulepreload", "/assets/react-AaNUmKY_.js");
+    failed("stylesheet", "/assets/index-Cj-iSej8.css");
+    await rideItOut();
+    expect(session.reloaded).not.toHaveBeenCalled();
+    expect(session.sent).toEqual([]);
   });
 });
