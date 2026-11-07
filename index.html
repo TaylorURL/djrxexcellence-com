@@ -283,7 +283,12 @@
         // hashes and the interaction continues; a failure that survives that
         // reload is a real defect and reaches the queue as one.
         var reloadKey = "dj-stale-reload";
-        var recovering = false;
+        // A file lost for a frame and then got back is a load that reached the
+        // end whole, so it gives the marker back. Only a file the page could
+        // not get back holds it.
+        var lost = false;
+        var asking = 0;
+        var ended = false;
         function staleReload() {
           try {
             if (sessionStorage.getItem(reloadKey)) return false;
@@ -301,11 +306,15 @@
         // queue with the page still broken. A load that reached the end
         // needing no recovery at all is the proof the document is sound, and
         // it clears the marker.
-        addEventListener("load", function () {
-          if (recovering) return;
+        function giveBack() {
+          if (!ended || asking > 0 || lost) return;
           try {
             sessionStorage.removeItem(reloadKey);
           } catch (ignored) {}
+        }
+        addEventListener("load", function () {
+          ended = true;
+          giveBack();
         });
         // A preload, a modulepreload and a prefetch are hints rather than
         // loads. The browser is free to drop one it decides not to keep - a
@@ -339,21 +348,75 @@
         // will not come reaches the queue. A file that answers took `kept`,
         // because the page still lost it for that frame and a live console is
         // owed the reason.
+        //
+        // And a request that never came back is not a file that is not there.
+        // It fails for the very reason the element's own load failed - the
+        // connection dropped - so reading that silence as a missing file puts
+        // the question to the one link that cannot answer it and then believes
+        // the silence. That is this fault exactly: a lost second takes the
+        // stylesheet and both module hints together, every hashed name in them
+        // the one the current document carries and every file answering 200,
+        // and the page reloads itself out from under the reader and files all
+        // three anyway. So only a real answer decides. A silence is waited out
+        // and asked again, on the backoff the boot script already rides a lost
+        // second out with, and the file counts as gone once the asking is
+        // spent.
+        var asks = 3;
         function ifGone(url, gone, kept) {
           if (!rawFetch) return gone();
-          try {
-            rawFetch(url, { credentials: "same-origin" }).then(function (
-              response,
-            ) {
-              if (response.ok) {
-                if (kept) kept();
-              } else {
-                gone();
-              }
-            }, gone);
-          } catch (ignored) {
-            gone();
+          var tries = 0;
+          asking += 1;
+          function done(act) {
+            asking -= 1;
+            if (act) act();
+            giveBack();
           }
+          function again() {
+            if (tries >= asks) return done(gone);
+            setTimeout(ask, 300 * tries);
+          }
+          function ask() {
+            tries += 1;
+            try {
+              rawFetch(url, { credentials: "same-origin" }).then(function (
+                response,
+              ) {
+                if (response.ok) {
+                  done(kept);
+                } else {
+                  done(gone);
+                }
+              }, again);
+            } catch (ignored) {
+              again();
+            }
+          }
+          ask();
+        }
+        // A file that answers is a file the page can still have, and saying so
+        // in the console while leaving the element broken is how a visitor
+        // comes to read an unstyled page the reporter has called recovered.
+        // The browser never retries a `<link>` it has already failed, so the
+        // page gets the stylesheet back only if something puts it back: a
+        // fresh node carrying the same href, which loads out of the cache the
+        // asking above has just filled. A hint needs none of this - whatever
+        // wanted the file fetches it for itself.
+        var refitted = 0;
+        function refit(node) {
+          if (refitted >= 10) return false;
+          if (!node || !node.tagName || !node.cloneNode) return false;
+          var tag = node.tagName.toLowerCase();
+          if (tag !== "link" && tag !== "img") return false;
+          if (node.getAttribute("data-dj-refit")) return false;
+          var fresh = node.cloneNode(false);
+          fresh.setAttribute("data-dj-refit", "1");
+          refitted += 1;
+          if (node.parentNode) {
+            node.parentNode.replaceChild(fresh, node);
+          } else {
+            document.head.appendChild(fresh);
+          }
+          return true;
         }
         // Capture phase, because element load failures fire error events that do not bubble.
         window.addEventListener(
@@ -365,18 +428,19 @@
                 event.target !== window &&
                 event.target.tagName
               ) {
-                var target = event.target.src || event.target.href || "";
-                var name = event.target.tagName.toLowerCase();
-                // Set here rather than inside the reload, because the check
-                // below is a round trip and `load` does not wait for it. A
-                // document that cleared the marker and then reloaded would
-                // arrive able to clear it again, which is a loop.
-                if (target) recovering = true;
+                var node = event.target;
+                var target = node.src || node.href || "";
+                var name = node.tagName.toLowerCase();
                 var fail = function () {
+                  // Marked here rather than on the event, because a file the
+                  // page asked for again and got is no loss at all. `load`
+                  // does not wait for that round trip, so the clearing waits
+                  // on the asking instead of on this flag.
+                  lost = true;
                   if (target.indexOf("/assets/") > -1 && staleReload()) return;
                   report("resource", "Failed to load " + name + ": " + target);
                 };
-                if (target && isHint(event.target)) {
+                if (target && isHint(node)) {
                   // Kept on the page either way, so a live console still
                   // answers what the browser dropped and when.
                   hold("hint", "Dropped hint " + name + ": " + target);
@@ -402,6 +466,7 @@
                 if (target) {
                   ifGone(target, fail, function () {
                     hold("resource", "Recovered " + name + ": " + target);
+                    refit(node);
                   });
                   return;
                 }
